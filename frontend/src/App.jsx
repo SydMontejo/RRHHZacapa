@@ -21,6 +21,9 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./layouts/Layout";
 import PrivateRoute from "./components/PrivateRoute";
+import CrearEmpleado from "./pages/CrearEmpleado";
+import EmpleadosList from "./pages/EmpleadosList";
+import CrearUsuario from "./pages/Usuarios";
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
         </PrivateRoute>}>
           <Route index element={<Navigate to="usuarios" />} />
           <Route path="usuarios" element={<Dashboard />} />
+          <Route path="usuarios/crear" element={<CrearUsuario />} />
+          <Route path="empleados" element={<EmpleadosList />} />
+          <Route path="empleados/crear" element={<CrearEmpleado />} />
         </Route>
       </Routes>
     </BrowserRouter>

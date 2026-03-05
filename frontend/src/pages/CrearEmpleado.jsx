@@ -1,10 +1,10 @@
 import { Typography, Box } from "@mui/material";
 
-export default function CrearUsuario() {
+export default function CrearEmpleado() {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Crear Usuario
+        Crear Empleado
       </Typography>
 
       <Typography variant="body1">
