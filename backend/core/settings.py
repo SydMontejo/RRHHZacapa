@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rrhh_db',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'sydmontejo2013',
         'HOST': 'localhost',
         'PORT': '3306',
     }
