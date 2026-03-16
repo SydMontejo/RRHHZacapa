@@ -41,13 +41,14 @@ INSTALLED_APPS = [
 
     'core',
     'accounts',
-    'organizacion',
+    #'organizacion',
     'empleados',
     'documentos',
     'auditoria',
     'rest_framework',
     'corsheaders',
     'django_extensions',
+    'organizacion.apps.OrganizacionConfig',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rrhh_db',
         'USER': 'root',
-        'PASSWORD': 'sydmontejo2013',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }
