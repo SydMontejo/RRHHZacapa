@@ -24,6 +24,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import CrearEmpleado from "./pages/CrearEmpleado";
 import EmpleadosList from "./pages/EmpleadosList";
 import CrearUsuario from "./pages/Usuarios";
+import CrearRenglon from "./pages/renglones/crear";
+import ListarRenglones from "./pages/renglones/listar";
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
           <Route path="usuarios/crear" element={<CrearUsuario />} />
           <Route path="empleados" element={<EmpleadosList />} />
           <Route path="empleados/crear" element={<CrearEmpleado />} />
+          <Route path="renglones" element={<ListarRenglones />} />
+          <Route path="renglones/crear" element={<CrearRenglon />} />
         </Route>
       </Routes>
     </BrowserRouter>

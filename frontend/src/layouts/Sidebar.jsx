@@ -1,74 +1,23 @@
-// import { Link } from "react-router-dom";
-// import { Box, Button, Typography } from "@mui/material";
-
-// export default function Sidebar() {
-//   const user = JSON.parse(localStorage.getItem("user"));
-//   return (
-//     <Box
-//       sx={{
-//         width: 250,
-//         backgroundColor: "#111827",
-//         color: "white",
-//         p: 3,
-//       }}
-//     >
-//       <Typography variant="h6">RRHH Panel</Typography>
-      
-//       <Typography variant="h5">USUARIOS</Typography>
-//       {/* USUARIOS */}
-
-//       <Button
-//         fullWidth
-//         variant="contained"
-//         sx={{ mt: 2 }}
-//         component={Link}
-//         to="/dashboard/usuarios"
-//       >
-//         Listar Usuarios
-//       </Button>
-
-//       <Button
-//         fullWidth
-//         variant="outlined"
-//         sx={{ mt: 2, color: "white", borderColor: "white" }}
-//         component={Link}
-//         to="/dashboard/usuarios/crear"
-//       >
-//         Crear Usuario
-//       </Button>
-
-      
-//       {/* EMPLEADOS */}
-//       <Typography variant="h5">Empleados</Typography>
-//       <Button
-//         fullWidth
-//         variant="contained"
-//         sx={{ mt: 4 }}
-//         component={Link}
-//         to="/dashboard/empleados"
-//       >
-//         Listar Empleados
-//       </Button>
-
-//       <Button
-//         fullWidth
-//         variant="outlined"
-//         sx={{ mt: 2, color: "white", borderColor: "white" }}
-//         component={Link}
-//         to="/dashboard/empleados/crear"
-//       >
-//         Crear Empleado
-//       </Button>
-
-//     </Box>
-//   );
-// }
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Typography, Divider } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  List,
+  ListItemButton,
+  ListItemText,
+  Collapse
+} from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 export default function Sidebar() {
 
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const [openUsuarios, setOpenUsuarios] = useState(false);
+  const [openRenglones, setOpenRenglones] = useState(false);
+  const [openEmpleados, setOpenEmpleados] = useState(false);
 
   return (
     <Box
@@ -76,65 +25,113 @@ export default function Sidebar() {
         width: 250,
         backgroundColor: "#111827",
         color: "white",
-        p: 3,
+        p: 2,
+        height: "100vh"
       }}
     >
-      <Typography variant="h6">RRHH Panel</Typography>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        RRHH Panel
+      </Typography>
 
-      {/* BOTONES SOLO ADMIN */}
+      <List component="nav">
 
-      {user?.rol === "ADMIN" && (
-        <>
-          <Typography sx={{ mt: 3 }}>Usuarios</Typography>
+        {/* ================= USUARIOS ================= */}
+        {user?.rol === "ADMIN" && (
+          <>
+            <ListItemButton onClick={() => setOpenUsuarios(!openUsuarios)}>
+              <ListItemText primary="Usuarios" />
+              {openUsuarios ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
 
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 2 }}
-            component={Link}
-            to="/dashboard/usuarios"
-          >
-            Listar Usuarios
-          </Button>
+            <Collapse in={openUsuarios} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
 
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 2, color: "white", borderColor: "white" }}
-            component={Link}
-            to="/dashboard/usuarios/crear"
-          >
-            Crear Usuario
-          </Button>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  to="/dashboard/usuarios"
+                >
+                  <ListItemText primary="Listar Usuarios" />
+                </ListItemButton>
 
-          <Divider sx={{ mt: 3, mb: 2, backgroundColor: "gray" }} />
-        </>
-      )}
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  to="/dashboard/usuarios/crear"
+                >
+                  <ListItemText primary="Crear Usuario" />
+                </ListItemButton>
 
-      {/* BOTONES PARA TODOS */}
+              </List>
+            </Collapse>
 
-      <Typography>Empleados</Typography>
+            <Divider sx={{ my: 2, backgroundColor: "gray" }} />
+          </>
+        )}
 
-      <Button
-        fullWidth
-        variant="contained"
-        sx={{ mt: 2 }}
-        component={Link}
-        to="/dashboard/empleados"
-      >
-        Listar Empleados
-      </Button>
+        {/* ================= RENGLONES ================= */}
+        {user?.rol === "ADMIN" && (
+          <>
+            <ListItemButton onClick={() => setOpenRenglones(!openRenglones)}>
+              <ListItemText primary="Renglones" />
+              {openRenglones ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
 
-      <Button
-        fullWidth
-        variant="outlined"
-        sx={{ mt: 2, color: "white", borderColor: "white" }}
-        component={Link}
-        to="/dashboard/empleados/crear"
-      >
-        Crear Empleado
-      </Button>
+            <Collapse in={openRenglones} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
 
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  to="/dashboard/renglones"
+                >
+                  <ListItemText primary="Listar Renglones" />
+                </ListItemButton>
+
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  to="/dashboard/renglones/crear"
+                >
+                  <ListItemText primary="Crear Renglón" />
+                </ListItemButton>
+
+              </List>
+            </Collapse>
+
+            <Divider sx={{ my: 2, backgroundColor: "gray" }} />
+          </>
+        )}
+
+        {/* ================= EMPLEADOS ================= */}
+        <ListItemButton onClick={() => setOpenEmpleados(!openEmpleados)}>
+          <ListItemText primary="Empleados" />
+          {openEmpleados ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+
+        <Collapse in={openEmpleados} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+
+            <ListItemButton
+              sx={{ pl: 4 }}
+              component={Link}
+              to="/dashboard/empleados"
+            >
+              <ListItemText primary="Listar Empleados" />
+            </ListItemButton>
+
+            <ListItemButton
+              sx={{ pl: 4 }}
+              component={Link}
+              to="/dashboard/empleados/crear"
+            >
+              <ListItemText primary="Crear Empleado" />
+            </ListItemButton>
+
+          </List>
+        </Collapse>
+
+      </List>
     </Box>
   );
 }
