@@ -26,6 +26,8 @@ import EmpleadosList from "./pages/EmpleadosList";
 import CrearUsuario from "./pages/Usuarios";
 import CrearRenglon from "./pages/renglones/crear";
 import ListarRenglones from "./pages/renglones/listar";
+import CrearServicio from "./pages/servicios/crear";
+import ListarServicio from "./pages/servicios/listar"
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
           <Route path="empleados/crear" element={<CrearEmpleado />} />
           <Route path="renglones" element={<ListarRenglones />} />
           <Route path="renglones/crear" element={<CrearRenglon />} />
+          <Route path="servicios" element={<ListarServicio />} />
+          <Route path="servicios/crear" element={<CrearServicio />} />
         </Route>
       </Routes>
     </BrowserRouter>

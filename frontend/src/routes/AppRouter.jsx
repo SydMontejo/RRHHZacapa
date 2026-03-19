@@ -31,6 +31,18 @@ export default function AppRouter() {
           element={
             <CrearRenglon />} 
         />
+
+        <Route 
+          path="/dashboard/servicios" 
+          element={
+            <ListarRenglones />} 
+        />
+        
+        <Route 
+          path="/dashboard/servicios/crear" 
+          element={
+            <CrearRenglon />} 
+        />
         </Route>
       </Routes>
     </BrowserRouter>

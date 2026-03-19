@@ -17,6 +17,7 @@ export default function Sidebar() {
 
   const [openUsuarios, setOpenUsuarios] = useState(false);
   const [openRenglones, setOpenRenglones] = useState(false);
+  const [openServicios, setOpenServicios] = useState(false);
   const [openEmpleados, setOpenEmpleados] = useState(false);
 
   return (
@@ -96,6 +97,37 @@ export default function Sidebar() {
                   <ListItemText primary="Crear Renglón" />
                 </ListItemButton>
 
+              </List>
+            </Collapse>
+
+            <Divider sx={{ my: 2, backgroundColor: "gray" }} />
+          </>
+        )}
+
+        {/* ================= SERVICIOS ================= */}
+        {user?.rol === "ADMIN" && (
+          <>
+            
+            <ListItemButton onClick={() => setOpenServicios(!openServicios)}>
+              <ListItemText primary="Servicios" />
+              {openServicios ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openServicios} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  to="/dashboard/servicios"
+                >
+                  <ListItemText primary="Listar Servicios" />
+                </ListItemButton>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  component={Link}
+                  to="/dashboard/servicios/crear"
+                >
+                  <ListItemText primary="Crear Servicio" />
+                </ListItemButton>
               </List>
             </Collapse>
 
