@@ -19,6 +19,7 @@ export default function Sidebar() {
   const [openRenglones, setOpenRenglones] = useState(false);
   const [openServicios, setOpenServicios] = useState(false);
   const [openEmpleados, setOpenEmpleados] = useState(false);
+  const [openPersonas, setOpenPersonas] = useState(false);
 
   return (
     <Box
@@ -134,6 +135,26 @@ export default function Sidebar() {
             <Divider sx={{ my: 2, backgroundColor: "gray" }} />
           </>
         )}
+        
+        {/* ================= PERSONAS ================== */}
+        <ListItemButton onClick={() => setOpenPersonas(!openPersonas)}>
+          <ListItemText primary="Personas" />
+          {openPersonas ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+
+        <Collapse in={openPersonas}>
+          <List component="div" disablePadding>
+
+            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/personas">
+              <ListItemText primary="Listar Personas" />
+            </ListItemButton>
+
+            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/personas/crear">
+              <ListItemText primary="Crear Persona" />
+            </ListItemButton>
+
+          </List>
+        </Collapse>
 
         {/* ================= EMPLEADOS ================= */}
         <ListItemButton onClick={() => setOpenEmpleados(!openEmpleados)}>

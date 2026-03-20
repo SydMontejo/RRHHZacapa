@@ -49,3 +49,21 @@ class Servicio(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Persona(models.Model):
+    id_persona = models.AutoField(primary_key=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200, null=True, blank=True)
+    telefono = models.CharField(max_length=20, null=True, blank=True)
+    dpi = models.CharField(max_length=13, unique=True)
+    correo = models.EmailField(max_length=120, unique=True)
+    foto = models.ImageField(upload_to='personas/', null=True, blank=True)
+    nit = models.CharField(max_length=20, null=True, blank=True, unique=True)
+    activo = models.BooleanField(default=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.nombres} {self.apellidos}"

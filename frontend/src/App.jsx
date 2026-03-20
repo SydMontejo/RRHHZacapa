@@ -28,6 +28,8 @@ import CrearRenglon from "./pages/renglones/crear";
 import ListarRenglones from "./pages/renglones/listar";
 import CrearServicio from "./pages/servicios/crear";
 import ListarServicio from "./pages/servicios/listar"
+import CrearPersona from "./pages/personas/crear";
+import ListarPersonas from "./pages/personas/listar";
 
 function App() {
   return (
@@ -48,6 +50,8 @@ function App() {
           <Route path="renglones/crear" element={<CrearRenglon />} />
           <Route path="servicios" element={<ListarServicio />} />
           <Route path="servicios/crear" element={<CrearServicio />} />
+          <Route path="personas" element={<ListarPersonas />} />
+          <Route path="personas/crear" element={<CrearPersona />} />
         </Route>
       </Routes>
     </BrowserRouter>
