@@ -135,9 +135,14 @@ STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'accounts.Usuario'
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS':[
+        'rest_framework.filters.SearchFilter'
+    ],        
+    
     'DEFAULT_AUTHENTICATION_CLASSES':(
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    
 }
 
 SIMPLE_JWT = {

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from .models import Rol
 from .models import Renglon, Servicio, Persona
@@ -33,6 +33,9 @@ class ServicioWiewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class PersonaViewSet(viewsets.ModelViewSet):
-    queryset = Persona.objects.all()
+    queryset = Persona.objects.all().order_by('id_persona')
     serializer_class = PersonaSerializer
     permission_classes = [EsRRHH1oAdmin]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nombres', 'apellidos', 'dpi', 'correo']

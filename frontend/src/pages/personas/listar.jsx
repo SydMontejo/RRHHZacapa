@@ -9,10 +9,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
+
 export default function ListarPersonas() {
   const [personas, setPersonas] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [personaEdit, setPersonaEdit] = useState(null);
+  const [preview, setPreview] = useState(null);
   const token = localStorage.getItem("access");
 
   const [snackbar, setSnackbar] = useState({
@@ -21,9 +23,9 @@ export default function ListarPersonas() {
     severity: "success",
   });
 
-  const obtenerPersonas = async () => {
+  const obtenerPersonas = async (query = "") => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/api/personas/", {
+      const res = await axios.get(`http://127.0.0.1:8000/api/personas/?search=${query}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPersonas(res.data);
@@ -42,7 +44,13 @@ export default function ListarPersonas() {
 
   const abrirModal = (row) => {
     setPersonaEdit({ ...row, foto: null });
+    if (row.foto){
+      setPreview('http://127.0.0.1:8000${row.foto}');
+    }else{
+      setPreview(null);
+    }
     setOpenModal(true);
+    console.log(row.foto);
   };
 
   const handleChange = (e) => {
@@ -53,10 +61,15 @@ export default function ListarPersonas() {
   };
 
   const handleFileChange = (e) => {
+    const file = e.target.files[0];
     setPersonaEdit({
       ...personaEdit,
-      foto: e.target.files[0],
+      foto: file,
     });
+
+    if (file){
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   const guardarCambios = async () => {
@@ -144,6 +157,13 @@ export default function ListarPersonas() {
     <Box sx={{ p: 3 }}>
       <Typography variant="h5">Personas</Typography>
 
+      <TextField
+  label="Buscar persona"
+  fullWidth
+  sx={{ mb: 2 }}
+  onChange={(e) => obtenerPersonas(e.target.value)}
+/>
+
       <div style={{ height: 500 }}>
         <DataGrid
           rows={personas}
@@ -162,6 +182,22 @@ export default function ListarPersonas() {
           <TextField name="apellidos" label="Apellidos" fullWidth margin="normal"
             value={personaEdit?.apellidos || ""} onChange={handleChange} />
 
+          {preview && (
+  <Box sx={{ mb: 2, textAlign: "center" }}>
+    <img
+      src={preview}
+      alt="Foto"
+      style={{
+        width: 120,
+        height: 120,
+        objectFit: "cover",
+        borderRadius: "8px",
+        border: "1px solid #ccc"
+      }}
+    />
+  </Box>
+)}
+          
           <input type="file" onChange={handleFileChange} />
 
           <FormControlLabel
@@ -196,3 +232,4 @@ export default function ListarPersonas() {
     </Box>
   );
 }
+
