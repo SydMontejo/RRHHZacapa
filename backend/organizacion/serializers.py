@@ -30,3 +30,4 @@ class PersonaSerializer(serializers.ModelSerializer):
         if len(value) != 13:
             raise serializers.ValidationError("El DPI debe tener 13 digitos.")
         return value
+

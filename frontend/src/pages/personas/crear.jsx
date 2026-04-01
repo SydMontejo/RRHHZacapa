@@ -16,12 +16,19 @@ export default function CrearPersona() {
   const token = localStorage.getItem("access");
 
   const [form, setForm] = useState({
-    nombres: "",
-    apellidos: "",
+    primer_nombre: "",
+    segundo_nombre:"",
+    tercer_nombre:"",
+    primer_apellido: "",
+    segundo_apellido:"",
+    tercer_apellido:"",
+    apellido_casada:"",
     dpi: "",
     correo: "",
     telefono: "",
     direccion: "",
+    departamento:"",
+    municipio:"",
     nit: "",
     activo: true,
     foto: null
@@ -102,13 +109,21 @@ export default function CrearPersona() {
       {error && <Alert severity="error">{error}</Alert>}
       {success && <Alert severity="success">{success}</Alert>}
 
-      <TextField fullWidth label="Nombres" name="nombres" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Apellidos" name="apellidos" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="Primer Nombre" name="primer_nombre" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="Segundo Nombre" name="segundo_nombre" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="Tercer Nombre" name="tercer_nombre" onChange={handleChange} margin="normal" />
+      <TextField fullWidth label="Primer Apellido" name="primer_apellido" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="Segundo Apellido" name="segundo_apellido" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="Tercer Apellido" name="tercer_apellido" onChange={handleChange} margin="normal" />
+      <TextField fullWidth label="Apellido de Casada" name="apellido_casada" onChange={handleChange} margin="normal"  />
       <TextField fullWidth label="DPI" name="dpi" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="NIT" name="nit" onChange={handleChange} margin="normal" required/>
       <TextField fullWidth label="Correo" name="correo" onChange={handleChange} margin="normal" required />
       <TextField fullWidth label="Teléfono" name="telefono" onChange={handleChange} margin="normal" />
       <TextField fullWidth label="Dirección" name="direccion" onChange={handleChange} margin="normal" />
-      <TextField fullWidth label="NIT" name="nit" onChange={handleChange} margin="normal" />
+      <TextField fullWidth label="Departameto" name="departamento" onChange={handleChange} margin="normal" required />
+      <TextField fullWidth label="Municipio" name="municipio" onChange={handleChange} margin="normal" required />
+      
 
       <input type="file" onChange={handleFileChange} />
 

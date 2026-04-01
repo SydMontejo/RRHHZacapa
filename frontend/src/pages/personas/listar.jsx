@@ -16,6 +16,7 @@ export default function ListarPersonas() {
   const [personaEdit, setPersonaEdit] = useState(null);
   const [preview, setPreview] = useState(null);
   const token = localStorage.getItem("access");
+  const [rows, setRows] = useState([]);
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -117,20 +118,28 @@ export default function ListarPersonas() {
 
   const columnas = [
     {
-      field: "foto",
-      headerName: "Foto",
-      width: 100,
-      renderCell: (params) =>
-        params.value ? (
-          <img
-            src={`http://127.0.0.1:8000${params.value}`}
-            width="40"
-          />
-        ) : "N/A",
+      field: "dpi",
+      headerName: "DPI",
+      width: 140,
     },
-    { field: "nombres", headerName: "Nombres", width: 150 },
-    { field: "apellidos", headerName: "Apellidos", width: 150 },
-    { field: "dpi", headerName: "DPI", width: 150 },
+    
+    {
+    field: "fulname",
+    headerName: "Nombre Completo",
+    width: 250,
+    renderCell: (params) => {
+      if (!params?.row) return '';
+      const row = params.row;
+      const primer = row.primer_nombre ?? '';
+      const segundo = row.segundo_nombre ?? '';
+      const primerApe = row.primer_apellido ?? '';
+      const segundoApe = row.segundo_apellido ?? '';
+      return `${primer} ${segundo} ${primerApe} ${segundoApe}`.trim();
+      },
+    },
+    { field: "nit", headerName: "NIT", width: 150 },
+    { field: "departamento", headerName: "Departamento", width: 150 },
+    { field: "municipio", headerName: "Municipio", width: 150 },
     { field: "correo", headerName: "Correo", width: 200 },
     {
       field: "activo",
@@ -176,11 +185,23 @@ export default function ListarPersonas() {
         <DialogTitle>Editar Persona</DialogTitle>
         <DialogContent>
 
-          <TextField name="nombres" label="Nombres" fullWidth margin="normal"
-            value={personaEdit?.nombres || ""} onChange={handleChange} />
+          <TextField name="primer_nombre" label="Primer Nombre" fullWidth margin="normal"
+            value={personaEdit?.primer_nombre || ""} onChange={handleChange} />
+          
+          <TextField name="segundo_nombre" label="Segundo Nombre" fullWidth margin="normal"
+            value={personaEdit?.segundo_nombre || ""} onChange={handleChange} />
 
-          <TextField name="apellidos" label="Apellidos" fullWidth margin="normal"
-            value={personaEdit?.apellidos || ""} onChange={handleChange} />
+          <TextField name="tercer_nombre" label="Tercer Nombre" fullWidth margin="normal"
+            value={personaEdit?.tercer_nombre || ""} onChange={handleChange} />
+
+          <TextField name="primer_apellido" label="Primer Apellido" fullWidth margin="normal"
+            value={personaEdit?.primer_apellido || ""} onChange={handleChange} />
+          
+          <TextField name="segundo_apellido" label="Segundo Apellido" fullWidth margin="normal"
+            value={personaEdit?.segundo_apellido || ""} onChange={handleChange} />
+          
+          <TextField name="apellido_casada" label="Apellido de Casada" fullWidth margin="normal"
+            value={personaEdit?.apellido_casada || ""} onChange={handleChange} />
 
           {preview && (
   <Box sx={{ mb: 2, textAlign: "center" }}>

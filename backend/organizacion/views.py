@@ -38,4 +38,4 @@ class PersonaViewSet(viewsets.ModelViewSet):
     permission_classes = [EsRRHH1oAdmin]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nombres', 'apellidos', 'dpi', 'correo']
+    search_fields = ['primer_nombre', 'primer_apellido', 'dpi']

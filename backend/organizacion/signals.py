@@ -22,14 +22,14 @@
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from django.apps import apps
-
+from django.contrib.auth import get_user_model
 
 @receiver(post_migrate)
 def crear_roles(sender, **kwargs):
 
-    # obtener modelo Rol desde la app organizacion
+    # rol desde organizacion
     Rol = apps.get_model("organizacion", "Rol")
-
+    Usuario = get_user_model()
     roles = [
         {
             "nombre": "ADMIN",
@@ -52,3 +52,19 @@ def crear_roles(sender, **kwargs):
                 "descripcion": rol["descripcion"]
             }
         )
+    
+    if not Usuario.objects.filter(username='admin').exists():
+        # Crear superusuario (esto lo hace con is_staff=True, is_superuser=True)
+        admin_user = Usuario.objects.create_superuser(
+            username='admin',
+            password='1234567',
+            email='admin@example.com'   # Opcional, puede ser None si tu modelo permite
+        )
+
+        # Asignar rol ADMIN
+        try:
+            rol_admin = Rol.objects.get(nombre='ADMIN')
+            admin_user.id_rol = rol_admin
+            admin_user.save()
+        except Rol.DoesNotExist:
+            pass
