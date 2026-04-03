@@ -1,8 +1,9 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from .models import Rol
-from .models import Renglon, Servicio, Persona
-from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer
+from .models import Renglon, Servicio, Persona, Empleado
+from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer
 from accounts.permissions import EsAdminSistema, EsRRHH1oAdmin
 
 class RolViewSet(viewsets.ReadOnlyModelViewSet):
@@ -39,3 +40,15 @@ class PersonaViewSet(viewsets.ModelViewSet):
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['primer_nombre', 'primer_apellido', 'dpi']
+
+class EmpleadoViewSet(viewsets.ModelViewSet):
+    queryset = Empleado.objects.all().order_by('-id_empleado')
+    serializer_class = EmpleadoSerializer
+
+    @action(detail=False, methods=['get'])
+    def personas_disponibles(self, request):
+        personas_con_empleado = Empleado.objects.values_list('id_persona', flat=True)
+        personas = Persona.objects.exclude(id_persona__in=personas_con_empleado)
+
+        serializer = PersonaSerializer(personas, many=True)
+        return Response(serializer.data)

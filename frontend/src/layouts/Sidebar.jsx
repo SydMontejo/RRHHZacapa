@@ -20,6 +20,7 @@ export default function Sidebar() {
   const [openServicios, setOpenServicios] = useState(false);
   const [openEmpleados, setOpenEmpleados] = useState(false);
   const [openPersonas, setOpenPersonas] = useState(false);
+  
 
   return (
     <Box
@@ -163,25 +164,13 @@ export default function Sidebar() {
         </ListItemButton>
 
         <Collapse in={openEmpleados} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-
-            <ListItemButton
-              sx={{ pl: 4 }}
-              component={Link}
-              to="/dashboard/empleados"
-            >
-              <ListItemText primary="Listar Empleados" />
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/empleados">
+              <ListItemText primary="Listar Empleado" />
             </ListItemButton>
 
-            <ListItemButton
-              sx={{ pl: 4 }}
-              component={Link}
-              to="/dashboard/empleados/crear"
-            >
+            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/empleados/crear">
               <ListItemText primary="Crear Empleado" />
             </ListItemButton>
-
-          </List>
         </Collapse>
 
       </List>

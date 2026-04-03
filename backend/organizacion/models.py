@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 
 class Rol(models.Model):
@@ -73,3 +74,68 @@ class Persona(models.Model):
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
+
+class Empleado(models.Model):
+    id_empleado = models.AutoField(primary_key=True)
+
+    id_persona = models.OneToOneField(
+        'Persona',
+        on_delete=models.RESTRICT,
+        db_column='id_persona'
+    )
+
+    id_usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL, #esto porque Usuario esta en otra carpeta.
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column='id_usuario'
+    )
+
+    numero_empleado = models.CharField(max_length=20, unique=True)
+
+    fecha_contratacion = models.DateField(null=True, blank=True)
+
+    id_renglon = models.ForeignKey(
+        'Renglon',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column='id_renglon'
+    )
+
+    id_servicio = models.ForeignKey(
+        'Servicio',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column='id_servicio'
+    )
+
+    puesto_oficial = models.CharField(max_length=100, null=True, blank=True)
+    especializacion = models.CharField(max_length=100, null=True, blank=True)
+
+    colegiado_activo = models.CharField(max_length=30, null=True, blank=True)
+    ubicacion_fisica = models.CharField(max_length=150, null=True, blank=True)
+
+    comisionado_seccion_numero = models.CharField(max_length=20, null=True, blank=True)
+    comisionado_seccion_nombre = models.CharField(max_length=100, null=True, blank=True)
+
+    activo = models.BooleanField(default=True)
+
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, #igual que arriba, Usuario esta en otra carpeta
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='empleados_creados',
+        db_column='created_by'
+    )
+
+    def __str__(self):
+        return self.numero_empleado

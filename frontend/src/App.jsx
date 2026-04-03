@@ -21,8 +21,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./layouts/Layout";
 import PrivateRoute from "./components/PrivateRoute";
-import CrearEmpleado from "./pages/CrearEmpleado";
-import EmpleadosList from "./pages/EmpleadosList";
+import CrearEmpleado from "./pages/empleados/crear";
+import EmpleadosList from "./pages/empleados/listar";
 import CrearUsuario from "./pages/Usuarios";
 import CrearRenglon from "./pages/renglones/crear";
 import ListarRenglones from "./pages/renglones/listar";
@@ -30,6 +30,7 @@ import CrearServicio from "./pages/servicios/crear";
 import ListarServicio from "./pages/servicios/listar"
 import CrearPersona from "./pages/personas/crear";
 import ListarPersonas from "./pages/personas/listar";
+import ListarEmpleados from "./pages/empleados/listar";
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
           <Route index element={<Navigate to="usuarios" />} />
           <Route path="usuarios" element={<Dashboard />} />
           <Route path="usuarios/crear" element={<CrearUsuario />} />
-          <Route path="empleados" element={<EmpleadosList />} />
+          <Route path="empleados" element={<ListarEmpleados />} />
           <Route path="empleados/crear" element={<CrearEmpleado />} />
           <Route path="renglones" element={<ListarRenglones />} />
           <Route path="renglones/crear" element={<CrearRenglon />} />

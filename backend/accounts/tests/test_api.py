@@ -76,10 +76,10 @@ class UsuarioAPITest(TestCase):
         # El estatus debe ser 201 Created
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
-        # Comprobamos que el username sea correcto
+        # Comprueba que el username sea correcto
         self.assertEqual(response.data["username"], "usuario_nuevo")
         
-        # Verificamos que 'rol_nombre' se haya generado bien
+        # Verifica que 'rol_nombre' se haya generado bien
         self.assertEqual(response.data["rol_nombre"], "Administrador")
 
     def test_crear_usuario_sin_token(self):
