@@ -46,6 +46,11 @@ class EmpleadoSerializer(serializers.ModelSerializer):
         return f"{p.primer_nombre} {p.primer_apellido}"
     
     def validate_id_persona(self, value):
-        if Empleado.objects.filter(id_persona=value).exists():
-            raise serializers.ValidationsError("Esta persona ya esta contratada")
+        if self.instance:
+            existe = Empleado.objects.filter(id_persona=value).exclude(pk=self.instance.pk).exists()
+        else:
+            existe = Empleado.objects.filter(id_persona=value).exists()
+
+        if existe:
+            raise serializers.ValidationError("Esta persona ya es empleado")
         return value
