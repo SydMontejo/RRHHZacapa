@@ -175,3 +175,30 @@ class Contrato(models.Model):
     activo = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Permiso(models.Model):
+    ESTADO_CHOICES = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+    ]
+
+    id_permiso = models.AutoField(primary_key=True)
+    id_empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, db_column='id_empleado')
+    motivo = models.TextField()
+    fecha_solicitud = models.DateField(auto_now_add=True)
+    fecha_requerida = models.DateField()
+    dias_solicitados = models.PositiveIntegerField(default=1)
+    fecha_aprobacion = models.DateField(null=True, blank=True)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='PENDIENTE')
+    documento = models.FileField(upload_to='permisos/', null=True, blank=True)
+    observaciones = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'permisos'
+        ordering = ['-fecha_solicitud']
+
+    def __str__(self):
+        return f"Permiso {self.id_permiso} - {self.id_empleado}"

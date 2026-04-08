@@ -21,6 +21,7 @@ export default function Sidebar() {
   const [openEmpleados, setOpenEmpleados] = useState(false);
   const [openPersonas, setOpenPersonas] = useState(false);
   const [openContratos, setOpenContratos] = useState(false);
+  const [openPermisos, setOpenPermisos] = useState(false);
 
   return (
     <Box
@@ -186,6 +187,19 @@ export default function Sidebar() {
 
           <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/contratos/crear">
             <ListItemText primary="Crear Contrato" />
+          </ListItemButton>
+        </Collapse>
+
+        <ListItemButton onClick={() => setOpenPermisos(!openPermisos)}>
+          <ListItemText primary="Permisos" />
+          {openPermisos ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openPermisos} timeout="auto" unmountOnExit>
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/permisos">
+            <ListItemText primary="Listar Permisos" />
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/permisos/crear">
+            <ListItemText primary="Solicitar Permiso" />
           </ListItemButton>
         </Collapse>
 

@@ -33,6 +33,9 @@ import ListarPersonas from "./pages/personas/listar";
 import ListarEmpleados from "./pages/empleados/listar";
 import ListarContratos from "./pages/contratos/listar";
 import CrearContrato from "./pages/contratos/crear";
+import CrearPermiso from "./pages/permisos/crear";
+import ListarPermiso from "./pages/permisos/listar";
+import DetallePermiso from "./pages/permisos/detalle";
 
 function App() {
   return (
@@ -57,6 +60,9 @@ function App() {
           <Route path="personas/crear" element={<CrearPersona />} />
           <Route path="contratos" element={<ListarContratos />} />
           <Route path="contratos/crear" element={<CrearContrato />} />
+          <Route path="permisos" element={<ListarPermiso />} />
+          <Route path="permisos/crear" element={<CrearPermiso />} />
+          <Route path="permisos/:id" element={<DetallePermiso />} />
         </Route>
       </Routes>
     </BrowserRouter>

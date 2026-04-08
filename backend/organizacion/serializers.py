@@ -5,6 +5,7 @@ from .models import Servicio
 from .models import Persona
 from .models import Empleado
 from .models import Contrato
+from .models import Permiso
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rol
@@ -73,3 +74,36 @@ class ContratoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contrato
         fields = '__all__'
+
+class PermisoSerializer(serializers.ModelSerializer):
+    empleado_nombre = serializers.SerializerMethodField()
+    empleado_apellido = serializers.SerializerMethodField()
+    documento_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Permiso
+        fields = '__all__'
+        read_only_fields = ('fecha_solicitud', 'created_at', 'updated_at')
+
+    def get_empleado_nombre(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_persona:
+            return obj.id_empleado.id_persona.primer_nombre
+        return ''
+
+    def get_empleado_apellido(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_persona:
+            return obj.id_empleado.id_persona.primer_apellido
+        return ''
+
+    def get_documento_url(self, obj):
+        if obj.documento:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.documento.url)
+            return obj.documento.url
+        return None
+
+    def validate_dias_solicitados(self, value):
+        if value < 1:
+            raise serializers.ValidationError("Los días solicitados deben ser al menos 1.")
+        return value
