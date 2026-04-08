@@ -1,9 +1,10 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.utils import timezone
 from .models import Rol
-from .models import Renglon, Servicio, Persona, Empleado
-from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer
+from .models import Renglon, Servicio, Persona, Empleado, Contrato
+from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer, ContratoSerializer
 from accounts.permissions import EsAdminSistema, EsRRHH1oAdmin
 
 class RolViewSet(viewsets.ReadOnlyModelViewSet):
@@ -52,3 +53,23 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
 
         serializer = PersonaSerializer(personas, many=True)
         return Response(serializer.data)
+    
+class ContratoViewSet(viewsets.ModelViewSet):
+    queryset = Contrato.objects.all().order_by('-fecha_inicio')
+    serializer_class = ContratoSerializer
+
+    def perform_create(self, serializer):
+        empleado = serializer.validated_data['id_empleado']
+
+        #cerrar contrato activo anterior
+        contrato_activo = Contrato.objects.filter(
+            id_empleado=empleado,
+            activo=True
+        ).first()
+
+        if contrato_activo:
+            contrato_activo.fecha_fin = timezone.now().date()
+            contrato_activo.activo = False
+            contrato_activo.save()
+
+        serializer.save()

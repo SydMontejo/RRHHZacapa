@@ -139,3 +139,39 @@ class Empleado(models.Model):
 
     def __str__(self):
         return self.numero_empleado
+
+class Contrato(models.Model):
+    id_contrato = models.AutoField(primary_key=True)
+
+    id_empleado = models.ForeignKey(
+        'Empleado',
+        on_delete=models.CASCADE,
+        db_column='id_empleado'
+    )
+
+    tipo_contrato = models.CharField(max_length=10)
+
+    id_renglon = models.ForeignKey(
+        'Renglon',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column='id_renglon'
+    )
+
+    id_servicio = models.ForeignKey(
+        'Servicio',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column='id_servicio'
+    )
+
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField(null=True, blank=True)
+
+    salario = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    activo = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)

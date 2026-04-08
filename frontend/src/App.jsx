@@ -31,6 +31,8 @@ import ListarServicio from "./pages/servicios/listar"
 import CrearPersona from "./pages/personas/crear";
 import ListarPersonas from "./pages/personas/listar";
 import ListarEmpleados from "./pages/empleados/listar";
+import ListarContratos from "./pages/contratos/listar";
+import CrearContrato from "./pages/contratos/crear";
 
 function App() {
   return (
@@ -53,6 +55,8 @@ function App() {
           <Route path="servicios/crear" element={<CrearServicio />} />
           <Route path="personas" element={<ListarPersonas />} />
           <Route path="personas/crear" element={<CrearPersona />} />
+          <Route path="contratos" element={<ListarContratos />} />
+          <Route path="contratos/crear" element={<CrearContrato />} />
         </Route>
       </Routes>
     </BrowserRouter>

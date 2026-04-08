@@ -20,7 +20,7 @@ export default function Sidebar() {
   const [openServicios, setOpenServicios] = useState(false);
   const [openEmpleados, setOpenEmpleados] = useState(false);
   const [openPersonas, setOpenPersonas] = useState(false);
-  
+  const [openContratos, setOpenContratos] = useState(false);
 
   return (
     <Box
@@ -171,6 +171,22 @@ export default function Sidebar() {
             <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/empleados/crear">
               <ListItemText primary="Crear Empleado" />
             </ListItemButton>
+        </Collapse>
+
+                {/* ================= CONTRATOS ================= */}
+        <ListItemButton onClick={() => setOpenContratos(!openContratos)}>
+          <ListItemText primary="Contratos" />
+          {openContratos ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+
+        <Collapse in={openContratos} timeout="auto" unmountOnExit>
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/contratos">
+            <ListItemText primary="Listar Contrato" />
+          </ListItemButton>
+
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/contratos/crear">
+            <ListItemText primary="Crear Contrato" />
+          </ListItemButton>
         </Collapse>
 
       </List>

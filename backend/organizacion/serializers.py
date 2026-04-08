@@ -4,6 +4,7 @@ from .models import Renglon
 from .models import Servicio
 from .models import Persona
 from .models import Empleado
+from .models import Contrato
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rol
@@ -36,6 +37,8 @@ class EmpleadoSerializer(serializers.ModelSerializer):
     persona_nombre = serializers.SerializerMethodField()
     renglon_codigo = serializers.CharField(source='id_renglon.codigo', read_only=True)
     servicio_nombre = serializers.CharField(source='id_servicio.nombre', read_only=True)
+    foto_persona = serializers.SerializerMethodField()
+    id_persona = PersonaSerializer(read_only=True)
 
     class Meta:
         model = Empleado
@@ -54,3 +57,19 @@ class EmpleadoSerializer(serializers.ModelSerializer):
         if existe:
             raise serializers.ValidationError("Esta persona ya es empleado")
         return value
+    
+    def get_foto_persona(self, obj):
+        if obj.id_persona and obj.id_persona.foto:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.id_persona.foto.url)
+            return obj.id_persona.foto.url
+        return None
+
+class ContratoSerializer(serializers.ModelSerializer):
+
+    empleado_nombre = serializers.CharField(source='id_empleado.id_persona.primer_nombre', read_only=True)
+
+    class Meta:
+        model = Contrato
+        fields = '__all__'

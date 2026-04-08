@@ -43,6 +43,7 @@
 // }
 
 import { useEffect, useState } from "react";
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import {
   Box,
   Typography,
@@ -72,6 +73,8 @@ export default function ListarEmpleados() {
 
   const [openModal, setOpenModal] = useState(false);
   const [empleadoEdit, setEmpleadoEdit] = useState(null);
+  const [openDetalleModal, setOpenDetalleModal] = useState(false);
+  const [empleadoDetalle, setEmpleadoDetalle] = useState(null);
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -169,6 +172,11 @@ export default function ListarEmpleados() {
     }
   };
 
+  const verDetalle = (row) => {
+    setEmpleadoDetalle(row);
+    setOpenDetalleModal(true);
+  };
+
   // ================= COLUMNAS =================
   const columnas = [
     { field: "id_empleado", headerName: "ID", width: 80 },
@@ -185,9 +193,12 @@ export default function ListarEmpleados() {
     {
       field: "acciones",
       headerName: "Acciones",
-      width: 150,
+      width: 180,
       renderCell: (params) => (
         <>
+          <IconButton onClick={() => verDetalle(params.row)}>
+            <VisibilityIcon />
+          </IconButton>
           <IconButton onClick={() => abrirModal(params.row)}>
             <EditIcon />
           </IconButton>
@@ -308,6 +319,71 @@ export default function ListarEmpleados() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* ================= MODAL DETALLES ================= */}
+<Dialog open={openDetalleModal} onClose={() => setOpenDetalleModal(false)} maxWidth="md" fullWidth>
+  <DialogTitle>Detalles del Empleado</DialogTitle>
+  <DialogContent dividers>
+    {empleadoDetalle && (
+      <Box sx={{ display: 'flex', gap: 3 }}>
+        {/* Columna izquierda: foto */}
+        <Box sx={{ width: 200, textAlign: 'center' }}>
+          {empleadoDetalle.foto_persona ? (
+            <img
+              src={empleadoDetalle.foto_persona}
+              alt="Foto del empleado"
+              style={{
+                width: '100%',
+                maxHeight: 200,
+                objectFit: 'cover',
+                borderRadius: 8,
+                border: '1px solid #ccc'
+              }}
+            />
+          ) : (
+            <Box sx={{
+              width: '100%',
+              height: 150,
+              bgcolor: '#f5f5f5',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 2,
+              color: '#666'
+            }}>
+              Sin foto
+            </Box>
+          )}
+        </Box>
+
+        {/* Columna derecha: datos laborales y de persona */}
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h6">Información laboral</Typography>
+          <Typography><strong>Número de empleado:</strong> {empleadoDetalle.numero_empleado}</Typography>
+          <Typography><strong>Persona:</strong> {empleadoDetalle.persona_nombre}</Typography>
+          <Typography><strong>Renglón:</strong> {empleadoDetalle.renglon_codigo}</Typography>
+          <Typography><strong>Servicio:</strong> {empleadoDetalle.servicio_nombre}</Typography>
+          <Typography><strong>Puesto oficial:</strong> {empleadoDetalle.puesto_oficial || 'N/A'}</Typography>
+          <Typography><strong>Ubicación física:</strong> {empleadoDetalle.ubicacion_fisica || 'N/A'}</Typography>
+          <Typography><strong>Comisionado sección número:</strong> {empleadoDetalle.comisionado_seccion_numero || 'N/A'}</Typography>
+          <Typography><strong>Comisionado sección nombre:</strong> {empleadoDetalle.comisionado_seccion_nombre || 'N/A'}</Typography>
+          <Typography><strong>Fecha contratación:</strong> {empleadoDetalle.fecha_contratacion || 'N/A'}</Typography>
+          <Typography><strong>Activo:</strong> {empleadoDetalle.activo ? 'Sí' : 'No'}</Typography>
+
+          <Typography variant="h6" sx={{ mt: 2 }}>Datos de la persona</Typography>
+          <Typography><strong>Nombre completo:</strong> {empleadoDetalle.persona_nombre}</Typography>
+          <Typography><strong>DPI:</strong> {empleadoDetalle.id_persona?.dpi || 'N/A'}</Typography>
+          <Typography><strong>Correo:</strong> {empleadoDetalle.id_persona?.correo || 'N/A'}</Typography>
+          <Typography><strong>Teléfono:</strong> {empleadoDetalle.id_persona?.telefono || 'N/A'}</Typography>
+          <Typography><strong>Dirección:</strong> {empleadoDetalle.id_persona?.direccion || 'N/A'}</Typography>
+        </Box>
+      </Box>
+    )}
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setOpenDetalleModal(false)}>Cerrar</Button>
+  </DialogActions>
+</Dialog>
 
       {/* ================= SNACKBAR ================= */}
       <Snackbar
