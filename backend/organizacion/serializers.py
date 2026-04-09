@@ -39,7 +39,8 @@ class EmpleadoSerializer(serializers.ModelSerializer):
     renglon_codigo = serializers.CharField(source='id_renglon.codigo', read_only=True)
     servicio_nombre = serializers.CharField(source='id_servicio.nombre', read_only=True)
     foto_persona = serializers.SerializerMethodField()
-    id_persona = PersonaSerializer(read_only=True)
+    #id_persona = PersonaSerializer(read_only=True)
+    persona_detalle = PersonaSerializer(source='id_persona', read_only=True)
 
     class Meta:
         model = Empleado

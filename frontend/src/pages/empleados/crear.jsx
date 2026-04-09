@@ -18,9 +18,9 @@ export default function CrearEmpleado() {
 
   const queryParams = new URLSearchParams(location.search);
   const personaId = queryParams.get("persona");
-
+  const initialPersonaId = personaId ? Number(personaId) : "";
   const [form, setForm] = useState({
-    id_persona: personaId || "",
+    id_persona: initialPersonaId,
     numero_empleado: "",
     fecha_contratacion: "",
     id_renglon: "",
@@ -63,11 +63,21 @@ export default function CrearEmpleado() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!form.id_persona || form.id_persona === "") {
+      alert("Debe seleccionar una persona");
+      return;
+    }
+
+    const dataToSend = {
+      ...form,
+      id_persona: Number(form.id_persona),
+    };
 
     try {
       await axios.post(
         "http://127.0.0.1:8000/api/empleados/",
-        form,
+        dataToSend,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
