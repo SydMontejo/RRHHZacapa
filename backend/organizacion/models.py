@@ -73,7 +73,7 @@ class Persona(models.Model):
     updated_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nombres} {self.apellidos}"
+        return f"{self.primer_nombre} {self.primer_apellido}"
 
 class Empleado(models.Model):
     id_empleado = models.AutoField(primary_key=True)
@@ -202,3 +202,29 @@ class Permiso(models.Model):
 
     def __str__(self):
         return f"Permiso {self.id_permiso} - {self.id_empleado}"
+
+class Vacacion(models.Model):
+    ESTADO_CHOICES = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+    ]
+
+    id_vacacion = models.AutoField(primary_key=True)
+    id_empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, db_column='id_empleado')
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    documento_autorizacion = models.FileField(upload_to='vacaciones/', null=True, blank=True)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='PENDIENTE')
+    observaciones = models.TextField(null=True, blank=True)
+    fecha_solicitud = models.DateField(auto_now_add=True)
+    fecha_aprobacion = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'vacaciones'
+        ordering = ['-fecha_solicitud']
+
+    def __str__(self):
+        return f"Vacación {self.id_vacacion} - {self.id_empleado}"

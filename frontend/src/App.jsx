@@ -36,6 +36,9 @@ import CrearContrato from "./pages/contratos/crear";
 import CrearPermiso from "./pages/permisos/crear";
 import ListarPermiso from "./pages/permisos/listar";
 import DetallePermiso from "./pages/permisos/detalle";
+import CrearVacacion from "./pages/vacaciones/crear";
+import ListarVacaciones from "./pages/vacaciones/listar";
+import DetalleVacacion from "./pages/vacaciones/detalle";
 
 function App() {
   return (
@@ -63,6 +66,9 @@ function App() {
           <Route path="permisos" element={<ListarPermiso />} />
           <Route path="permisos/crear" element={<CrearPermiso />} />
           <Route path="permisos/:id" element={<DetallePermiso />} />
+          <Route path="vacaciones" element={<ListarVacaciones />} />
+          <Route path="vacaciones/crear" element={<CrearVacacion />} />
+          <Route path="vacaciones/:id" element={<DetalleVacacion />} />
         </Route>
       </Routes>
     </BrowserRouter>

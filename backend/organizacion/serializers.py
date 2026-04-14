@@ -6,6 +6,8 @@ from .models import Persona
 from .models import Empleado
 from .models import Contrato
 from .models import Permiso
+from .models import Vacacion
+from datetime import date
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rol
@@ -108,3 +110,48 @@ class PermisoSerializer(serializers.ModelSerializer):
         if value < 1:
             raise serializers.ValidationError("Los días solicitados deben ser al menos 1.")
         return value
+    
+class VacacionSerializer(serializers.ModelSerializer):
+    empleado_nombre = serializers.SerializerMethodField()
+    empleado_apellido = serializers.SerializerMethodField()
+    documento_url = serializers.SerializerMethodField()
+    estado_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Vacacion
+        fields = '__all__'
+        read_only_fields = ('fecha_solicitud', 'fecha_aprobacion', 'created_at', 'updated_at')
+
+    def get_empleado_nombre(self, obj):
+        print(f"DEBUG: obj.id_empleado = {obj.id_empleado}")
+        if obj.id_empleado:
+            print(f"DEBUG: obj.id_empleado.id_persona = {obj.id_empleado.id_persona}")
+            if obj.id_empleado.id_persona:
+                print(f"DEBUG: primer_nombre = {obj.id_empleado.id_persona.primer_nombre}")
+        return obj.id_empleado.id_persona.primer_nombre if obj.id_empleado and obj.id_empleado.id_persona else ''
+
+    def get_empleado_apellido(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_persona:
+            return obj.id_empleado.id_persona.primer_apellido
+        return ''
+
+    def get_documento_url(self, obj):
+        if obj.documento_autorizacion:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.documento_autorizacion.url)
+            return obj.documento_autorizacion.url
+        return None
+
+    def get_estado_display(self, obj):
+        hoy = date.today()
+        if obj.estado == 'APROBADO' and obj.fecha_inicio <= hoy <= obj.fecha_fin:
+            return 'EN_EJECUCION'
+        return obj.estado
+
+    def validate(self, data):
+        fecha_inicio = data.get('fecha_inicio')
+        fecha_fin = data.get('fecha_fin')
+        if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
+            raise serializers.ValidationError("La fecha fin debe ser posterior o igual a la fecha inicio")
+        return data

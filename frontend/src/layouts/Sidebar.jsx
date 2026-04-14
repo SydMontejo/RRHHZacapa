@@ -22,6 +22,7 @@ export default function Sidebar() {
   const [openPersonas, setOpenPersonas] = useState(false);
   const [openContratos, setOpenContratos] = useState(false);
   const [openPermisos, setOpenPermisos] = useState(false);
+  const [openVacaciones, setOpenVacaciones] = useState(false);
 
   return (
     <Box
@@ -202,6 +203,22 @@ export default function Sidebar() {
             <ListItemText primary="Solicitar Permiso" />
           </ListItemButton>
         </Collapse>
+
+        {/* Vacas */}
+       <ListItemButton onClick={() => setOpenVacaciones(!openVacaciones)}>
+        <ListItemText primary="Vacaciones" />
+        {openVacaciones ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={openVacaciones}>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones">
+            <ListItemText primary="Listar Solicitudes" />
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones/crear">
+            <ListItemText primary="Solicitar Vacaciones" />
+          </ListItemButton>
+        </List>
+      </Collapse>
 
       </List>
     </Box>

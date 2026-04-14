@@ -4,9 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
-from .models import Rol
+from .models import Rol, Vacacion
 from .models import Renglon, Servicio, Persona, Empleado, Contrato, Permiso
-from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer, ContratoSerializer, PermisoSerializer
+from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer, ContratoSerializer, PermisoSerializer, VacacionSerializer
 from accounts.permissions import EsAdminSistema, EsRRHH1oAdmin
 
 class RolViewSet(viewsets.ReadOnlyModelViewSet):
@@ -59,6 +59,23 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         serializer = PersonaSerializer(personas, many=True)
         return Response(serializer.data)
     
+    @action(detail=False, methods=['get'])
+    def por_dpi(self, request):
+        dpi = request.query_params.get('dpi')
+        if not dpi:
+            return Response({'error': 'Se requiere DPI'}, status=400)
+        try:
+            # Buscar persona por DPI
+            persona = Persona.objects.get(dpi=dpi)
+            # Buscar empleado asociado a esa persona
+            empleado = Empleado.objects.get(id_persona=persona)
+            serializer = self.get_serializer(empleado)
+            return Response(serializer.data)
+        except Persona.DoesNotExist:
+            return Response({'error': 'Persona no encontrada'}, status=404)
+        except Empleado.DoesNotExist:
+            return Response({'error': 'La persona existe pero no es empleado'}, status=404)
+
 class ContratoViewSet(viewsets.ModelViewSet):
     queryset = Contrato.objects.all().order_by('-fecha_inicio')
     serializer_class = ContratoSerializer
@@ -85,3 +102,42 @@ class PermisoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['estado']
+
+class VacacionViewSet(viewsets.ModelViewSet):
+    queryset = Vacacion.objects.all()
+    serializer_class = VacacionSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['estado']  # Permite filtrar por estado en la URL: ?estado=APROBADO
+
+    @action(detail=True, methods=['post'])
+    def aceptar(self, request, pk=None):
+        vacacion = self.get_object()
+        vacacion.estado = 'APROBADO'
+        vacacion.fecha_aprobacion = timezone.now().date()
+        vacacion.save()
+        return Response({'status': 'aprobado'})
+
+    @action(detail=True, methods=['post'])
+    def rechazar(self, request, pk=None):
+        vacacion = self.get_object()
+        vacacion.estado = 'RECHAZADO'
+        vacacion.observaciones = request.data.get('observaciones', '')
+        vacacion.save()
+        return Response({'status': 'rechazado'})
+
+    @action(detail=True, methods=['put'])
+    def modificar_fechas(self, request, pk=None):
+        vacacion = self.get_object()
+        nueva_fecha_inicio = request.data.get('fecha_inicio')
+        nueva_fecha_fin = request.data.get('fecha_fin')
+        if nueva_fecha_inicio and nueva_fecha_fin:
+            vacacion.fecha_inicio = nueva_fecha_inicio
+            vacacion.fecha_fin = nueva_fecha_fin
+            vacacion.save()
+            return Response({'status': 'fechas actualizadas'})
+        return Response({'error': 'Fechas requeridas'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def perform_create(self, serializer):
+        print("Datos recibidos:", serializer.validated_data)
+        serializer.save()
