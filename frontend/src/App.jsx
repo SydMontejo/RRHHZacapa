@@ -39,7 +39,7 @@ import DetallePermiso from "./pages/permisos/detalle";
 import CrearVacacion from "./pages/vacaciones/crear";
 import ListarVacaciones from "./pages/vacaciones/listar";
 import DetalleVacacion from "./pages/vacaciones/detalle";
-
+import Home from "./pages/Home";
 function App() {
   return (
     <BrowserRouter>
@@ -50,7 +50,8 @@ function App() {
         <Route path="/dashboard" element={<PrivateRoute>
           <Layout /> 
         </PrivateRoute>}>
-          <Route index element={<Navigate to="usuarios" />} />
+          <Route index element={<Navigate to="home" />} />
+          <Route path="home" element={<Home />} />
           <Route path="usuarios" element={<Dashboard />} />
           <Route path="usuarios/crear" element={<CrearUsuario />} />
           <Route path="empleados" element={<ListarEmpleados />} />

@@ -6,10 +6,24 @@ import {
   Divider,
   List,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   Collapse
 } from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import {  ExpandLess,
+  ExpandMore,
+  Home as HomeIcon,
+  People as PeopleIcon,
+  Category as CategoryIcon,           // Para Renglones
+  MiscellaneousServices as ServicesIcon, // Para Servicios
+  Person as PersonIcon,               // Para Personas
+  Badge as BadgeIcon,                 // Para Empleados
+  Description as DescriptionIcon,     // Para Contratos
+  Assignment as AssignmentIcon,       // Para Permisos
+  BeachAccess as BeachAccessIcon      // Para Vacaciones 
+  } from "@mui/icons-material";
+
+// import HomeIcon from "@mui/icons-material/Home"
 
 export default function Sidebar() {
 
@@ -39,11 +53,16 @@ export default function Sidebar() {
       </Typography>
 
       <List component="nav">
-
+        {/* Botón Home al inicio */}
+        <ListItemButton component={Link} to="/dashboard/home">
+          <ListItemIcon sx={{ color: "white" }}><HomeIcon /></ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItemButton>
         {/* ================= USUARIOS ================= */}
         {user?.rol === "ADMIN" && (
           <>
             <ListItemButton onClick={() => setOpenUsuarios(!openUsuarios)}>
+              <ListItemIcon sx={{ color: "white" }}><PeopleIcon /></ListItemIcon>
               <ListItemText primary="Usuarios" />
               {openUsuarios ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
@@ -69,8 +88,7 @@ export default function Sidebar() {
 
               </List>
             </Collapse>
-
-            <Divider sx={{ my: 2, backgroundColor: "gray" }} />
+          
           </>
         )}
 
@@ -78,6 +96,7 @@ export default function Sidebar() {
         {user?.rol === "ADMIN" && (
           <>
             <ListItemButton onClick={() => setOpenRenglones(!openRenglones)}>
+               <ListItemIcon sx={{ color: "white" }}><CategoryIcon /></ListItemIcon>
               <ListItemText primary="Renglones" />
               {openRenglones ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
@@ -104,7 +123,6 @@ export default function Sidebar() {
               </List>
             </Collapse>
 
-            <Divider sx={{ my: 2, backgroundColor: "gray" }} />
           </>
         )}
 
@@ -113,6 +131,7 @@ export default function Sidebar() {
           <>
             
             <ListItemButton onClick={() => setOpenServicios(!openServicios)}>
+              <ListItemIcon sx={{ color: "white" }}><ServicesIcon /></ListItemIcon>
               <ListItemText primary="Servicios" />
               {openServicios ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
@@ -135,12 +154,12 @@ export default function Sidebar() {
               </List>
             </Collapse>
 
-            <Divider sx={{ my: 2, backgroundColor: "gray" }} />
           </>
         )}
         
         {/* ================= PERSONAS ================== */}
         <ListItemButton onClick={() => setOpenPersonas(!openPersonas)}>
+          <ListItemIcon sx={{ color: "white" }}><PersonIcon /></ListItemIcon>
           <ListItemText primary="Personas" />
           {openPersonas ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
@@ -161,6 +180,7 @@ export default function Sidebar() {
 
         {/* ================= EMPLEADOS ================= */}
         <ListItemButton onClick={() => setOpenEmpleados(!openEmpleados)}>
+          <ListItemIcon sx={{ color: "white" }}><BadgeIcon /></ListItemIcon>
           <ListItemText primary="Empleados" />
           {openEmpleados ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
@@ -177,6 +197,7 @@ export default function Sidebar() {
 
                 {/* ================= CONTRATOS ================= */}
         <ListItemButton onClick={() => setOpenContratos(!openContratos)}>
+          <ListItemIcon sx={{ color: "white" }}><DescriptionIcon /></ListItemIcon>
           <ListItemText primary="Contratos" />
           {openContratos ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
@@ -190,8 +211,9 @@ export default function Sidebar() {
             <ListItemText primary="Crear Contrato" />
           </ListItemButton>
         </Collapse>
-
+        {/* ================= PERMISOS ================= */}
         <ListItemButton onClick={() => setOpenPermisos(!openPermisos)}>
+          <ListItemIcon sx={{ color: "white" }}><AssignmentIcon /></ListItemIcon>
           <ListItemText primary="Permisos" />
           {openPermisos ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
@@ -206,6 +228,7 @@ export default function Sidebar() {
 
         {/* Vacas */}
        <ListItemButton onClick={() => setOpenVacaciones(!openVacaciones)}>
+        <ListItemIcon sx={{ color: "white" }}><BeachAccessIcon /></ListItemIcon>
         <ListItemText primary="Vacaciones" />
         {openVacaciones ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
