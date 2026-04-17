@@ -140,12 +140,170 @@
 //     </Box>
 //   );
 // }
+//====================================================================================================================
+// import { useState, useEffect } from "react";
+// import axios from "axios";
+// import {
+//   Box, Button, TextField, Typography, Grid, Paper,
+//   Alert, CircularProgress, Autocomplete
+// } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
 
-import { useState, useEffect } from "react";
+// export default function CrearPermiso() {
+//   const navigate = useNavigate();
+//   const token = localStorage.getItem("access");
+//   const [form, setForm] = useState({
+//     id_empleado: "",
+//     motivo: "",
+//     fecha_requerida: "",
+//     dias_solicitados: 1,
+//     documento: null,
+//   });
+//   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState(null);
+//   const [empleadosOptions, setEmpleadosOptions] = useState([]);
+//   const [loadingEmpleados, setLoadingEmpleados] = useState(false);
+//   const [error, setError] = useState("");
+
+//   const buscarEmpleados = async (inputValue) => {
+//     if (!inputValue || inputValue.length < 2) {
+//       setEmpleadosOptions([]);
+//       return;
+//     }
+//     setLoadingEmpleados(true);
+//     try {
+//       const response = await axios.get(`http://127.0.0.1:8000/api/empleados/?search=${inputValue}`, {
+//         headers: { Authorization: `Bearer ${token}` }
+//       });
+//       setEmpleadosOptions(response.data);
+//     } catch (err) {
+//       console.error(err);
+//     } finally {
+//       setLoadingEmpleados(false);
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!form.id_empleado) {
+//       setError("Debe seleccionar un empleado");
+//       return;
+//     }
+//     setError("");
+//     const data = new FormData();
+//     data.append("id_empleado", form.id_empleado);
+//     data.append("motivo", form.motivo);
+//     data.append("fecha_requerida", form.fecha_requerida);
+//     data.append("dias_solicitados", form.dias_solicitados);
+//     if (form.documento) data.append("documento", form.documento);
+
+//     try {
+//       await axios.post("http://127.0.0.1:8000/api/permisos/", data, {
+//         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
+//       });
+//       alert("Permiso solicitado correctamente");
+//       navigate("/dashboard/permisos");
+//     } catch (err) {
+//       setError(err.response?.data?.detail || "Error al enviar la solicitud");
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setForm(prev => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleFileChange = (e) => {
+//     setForm(prev => ({ ...prev, documento: e.target.files[0] }));
+//   };
+
+//   return (
+//     <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, px: 2 }}>
+//       <Paper sx={{ p: 4 }}>
+//         <Typography variant="h4" gutterBottom>Solicitar Permiso</Typography>
+//         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+//         <form onSubmit={handleSubmit}>
+//           <Grid container spacing={2}>
+//             <Grid item xs={12}>
+//               <Autocomplete
+//                 options={empleadosOptions}
+//                 loading={loadingEmpleados}
+//                 getOptionLabel={(option) => `${option.numero_empleado} - ${option.persona_nombre} (${option.id_persona?.dpi || 'Sin DPI'})`}
+//                 isOptionEqualToValue={(option, value) => option.id_empleado === value?.id_empleado}
+//                 onInputChange={(event, newInputValue) => buscarEmpleados(newInputValue)}
+//                 onChange={(event, newValue) => {
+//                   setEmpleadoSeleccionado(newValue);
+//                   setForm(prev => ({ ...prev, id_empleado: newValue?.id_empleado || "" }));
+//                 }}
+//                 renderInput={(params) => (
+//                   <TextField
+//                     {...params}
+//                     label="Empleado"
+//                     required
+//                     helperText="Buscar por número de empleado, DPI o nombre"
+//                   />
+//                 )}
+//               />
+//             </Grid>
+//             <Grid item xs={12}>
+//               <TextField
+//                 fullWidth
+//                 required
+//                 multiline
+//                 rows={3}
+//                 name="motivo"
+//                 label="Motivo del permiso"
+//                 value={form.motivo}
+//                 onChange={handleChange}
+//               />
+//             </Grid>
+//             <Grid item xs={12} md={6}>
+//               <TextField
+//                 fullWidth
+//                 required
+//                 type="date"
+//                 name="fecha_requerida"
+//                 label="Fecha requerida"
+//                 value={form.fecha_requerida}
+//                 onChange={handleChange}
+//                 InputLabelProps={{ shrink: true }}
+//               />
+//             </Grid>
+//             <Grid item xs={12} md={6}>
+//               <TextField
+//                 fullWidth
+//                 required
+//                 type="number"
+//                 name="dias_solicitados"
+//                 label="Días solicitados"
+//                 value={form.dias_solicitados}
+//                 onChange={handleChange}
+//                 InputProps={{ inputProps: { min: 1, step: 1 } }}
+//                 helperText="Número de días que necesita el permiso"
+//               />
+//             </Grid>
+//             <Grid item xs={12}>
+//               <Button variant="outlined" component="label" fullWidth>
+//                 Subir documento (PDF)
+//                 <input type="file" hidden accept="application/pdf" onChange={handleFileChange} />
+//               </Button>
+//               {form.documento && <Typography variant="caption">{form.documento.name}</Typography>}
+//             </Grid>
+//           </Grid>
+//           <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+//             <Button variant="outlined" onClick={() => navigate("/dashboard/permisos")}>Cancelar</Button>
+//             <Button type="submit" variant="contained">Enviar solicitud</Button>
+//           </Box>
+//         </form>
+//       </Paper>
+//     </Box>
+//   );
+// }
+//===================================================================================================================
+import { useState } from "react";
 import axios from "axios";
 import {
   Box, Button, TextField, Typography, Grid, Paper,
-  Alert, CircularProgress, Autocomplete
+  Alert, CircularProgress
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -159,33 +317,38 @@ export default function CrearPermiso() {
     dias_solicitados: 1,
     documento: null,
   });
-  const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState(null);
-  const [empleadosOptions, setEmpleadosOptions] = useState([]);
-  const [loadingEmpleados, setLoadingEmpleados] = useState(false);
+  const [empleado, setEmpleado] = useState(null);
+  const [dpi, setDpi] = useState("");
+  const [buscando, setBuscando] = useState(false);
   const [error, setError] = useState("");
 
-  const buscarEmpleados = async (inputValue) => {
-    if (!inputValue || inputValue.length < 2) {
-      setEmpleadosOptions([]);
+  const handleBuscarEmpleado = async () => {
+    if (!dpi) {
+      setError("Ingrese un DPI");
       return;
     }
-    setLoadingEmpleados(true);
+    setBuscando(true);
+    setError("");
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/empleados/?search=${inputValue}`, {
+      const response = await axios.get(`http://127.0.0.1:8000/api/empleados/por_dpi/?dpi=${dpi}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setEmpleadosOptions(response.data);
+      const emp = response.data;
+      setEmpleado(emp);
+      setForm(prev => ({ ...prev, id_empleado: emp.id_empleado }));
     } catch (err) {
-      console.error(err);
+      setError(err.response?.data?.error || "Empleado no encontrado");
+      setEmpleado(null);
+      setForm(prev => ({ ...prev, id_empleado: "" }));
     } finally {
-      setLoadingEmpleados(false);
+      setBuscando(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.id_empleado) {
-      setError("Debe seleccionar un empleado");
+      setError("Debe buscar y seleccionar un empleado");
       return;
     }
     setError("");
@@ -223,27 +386,30 @@ export default function CrearPermiso() {
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
+            {/* Búsqueda por DPI */}
             <Grid item xs={12}>
-              <Autocomplete
-                options={empleadosOptions}
-                loading={loadingEmpleados}
-                getOptionLabel={(option) => `${option.numero_empleado} - ${option.persona_nombre} (${option.id_persona?.dpi || 'Sin DPI'})`}
-                isOptionEqualToValue={(option, value) => option.id_empleado === value?.id_empleado}
-                onInputChange={(event, newInputValue) => buscarEmpleados(newInputValue)}
-                onChange={(event, newValue) => {
-                  setEmpleadoSeleccionado(newValue);
-                  setForm(prev => ({ ...prev, id_empleado: newValue?.id_empleado || "" }));
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Empleado"
-                    required
-                    helperText="Buscar por número de empleado, DPI o nombre"
-                  />
-                )}
-              />
+              <Box display="flex" gap={2} alignItems="center">
+                <TextField
+                  label="DPI del empleado"
+                  value={dpi}
+                  onChange={(e) => setDpi(e.target.value)}
+                  fullWidth
+                />
+                <Button
+                  variant="contained"
+                  onClick={handleBuscarEmpleado}
+                  disabled={buscando}
+                >
+                  {buscando ? <CircularProgress size={24} /> : "Buscar"}
+                </Button>
+              </Box>
+              {empleado && (
+                <Alert severity="success" sx={{ mt: 1 }}>
+                  {empleado.persona_detalle?.primer_nombre} {empleado.persona_detalle?.primer_apellido} - {empleado.numero_empleado}
+                </Alert>
+              )}
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
