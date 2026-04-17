@@ -1,4 +1,6 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
+from django.utils import timezone
 from .models import Rol
 from .models import Renglon
 from .models import Servicio
@@ -37,6 +39,9 @@ class PersonaSerializer(serializers.ModelSerializer):
         return value
 
 class EmpleadoSerializer(serializers.ModelSerializer):
+    queryset = Empleado.objects.all() 
+    
+    search_fields = ['numero_empleado','id_persona__dpi', 'id_persona__primer_nombre']
     persona_nombre = serializers.SerializerMethodField()
     renglon_codigo = serializers.CharField(source='id_renglon.codigo', read_only=True)
     servicio_nombre = serializers.CharField(source='id_servicio.nombre', read_only=True)
@@ -69,6 +74,14 @@ class EmpleadoSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.id_persona.foto.url)
             return obj.id_persona.foto.url
         return None
+    
+    def destroy(self, request, *args, **kwargs):
+        empleado = self.get_object()
+        # Eliminación lógica: marcar como inactivo y guardar fecha
+        empleado.activo = False
+        empleado.deleted_at = timezone.now()
+        empleado.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ContratoSerializer(serializers.ModelSerializer):
 
