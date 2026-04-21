@@ -23,7 +23,7 @@ import {  ExpandLess,
   BeachAccess as BeachAccessIcon      // Para Vacaciones 
   } from "@mui/icons-material";
 
-// import HomeIcon from "@mui/icons-material/Home"
+import GavelIcon from "@mui/icons-material/Gavel"
 
 export default function Sidebar() {
 
@@ -37,6 +37,7 @@ export default function Sidebar() {
   const [openContratos, setOpenContratos] = useState(false);
   const [openPermisos, setOpenPermisos] = useState(false);
   const [openVacaciones, setOpenVacaciones] = useState(false);
+  const [openSanciones, setOpenSanciones] = useState(false);
 
   return (
     <Box
@@ -231,7 +232,7 @@ export default function Sidebar() {
         <ListItemIcon sx={{ color: "white" }}><BeachAccessIcon /></ListItemIcon>
         <ListItemText primary="Vacaciones" />
         {openVacaciones ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
+       </ListItemButton>
       <Collapse in={openVacaciones}>
         <List component="div" disablePadding>
           <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones">
@@ -242,7 +243,22 @@ export default function Sidebar() {
           </ListItemButton>
         </List>
       </Collapse>
-
+        {/* =========================Sanciones============================ */}
+        <ListItemButton onClick={() => setOpenSanciones(!openSanciones)}>
+          <ListItemIcon sx={{ color: "white" }}><GavelIcon /></ListItemIcon>
+          <ListItemText primary="Sanciones" />
+          {openSanciones ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openSanciones}>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/sanciones">
+              <ListItemText primary="Listar Sanciones" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/sanciones/crear">
+              <ListItemText primary="Registrar Sanción" />
+            </ListItemButton>
+          </List>
+        </Collapse>
       </List>
     </Box>
   );

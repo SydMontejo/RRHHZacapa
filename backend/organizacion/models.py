@@ -228,3 +228,26 @@ class Vacacion(models.Model):
 
     def __str__(self):
         return f"Vacación {self.id_vacacion} - {self.id_empleado}"
+    
+# models.py
+from django.db import models
+from django.conf import settings
+
+class Sancion(models.Model):
+    id_sancion = models.AutoField(primary_key=True)
+    id_empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, db_column='id_empleado')
+    fecha_sancion = models.DateField()
+    detalle = models.TextField(max_length=500)
+    documento = models.FileField(upload_to='sanciones/', null=True, blank=True)
+    activo = models.BooleanField(default=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        db_table = 'sanciones'
+        ordering = ['-fecha_sancion']
+
+    def __str__(self):
+        return f"Sanción {self.id_sancion} - {self.id_empleado.numero_empleado}"

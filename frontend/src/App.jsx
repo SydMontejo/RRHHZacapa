@@ -40,6 +40,8 @@ import CrearVacacion from "./pages/vacaciones/crear";
 import ListarVacaciones from "./pages/vacaciones/listar";
 import DetalleVacacion from "./pages/vacaciones/detalle";
 import Home from "./pages/Home";
+import CrearSancion from "./pages/sanciones/crear";
+import ListarSanciones from "./pages/sanciones/listar";
 function App() {
   return (
     <BrowserRouter>
@@ -70,6 +72,8 @@ function App() {
           <Route path="vacaciones" element={<ListarVacaciones />} />
           <Route path="vacaciones/crear" element={<CrearVacacion />} />
           <Route path="vacaciones/:id" element={<DetalleVacacion />} />
+          <Route path="sanciones" element={<ListarSanciones />} />
+          <Route path="sanciones/crear" element={<CrearSancion />} />
         </Route>
       </Routes>
     </BrowserRouter>

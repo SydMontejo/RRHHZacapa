@@ -168,3 +168,40 @@ class VacacionSerializer(serializers.ModelSerializer):
         if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
             raise serializers.ValidationError("La fecha fin debe ser posterior o igual a la fecha inicio")
         return data
+
+# serializers.py
+from rest_framework import serializers
+from .models import Sancion, Empleado, Persona
+
+class SancionSerializer(serializers.ModelSerializer):
+    empleado_nombre = serializers.SerializerMethodField()
+    empleado_servicio = serializers.SerializerMethodField()
+    empleado_ubicacion = serializers.SerializerMethodField()
+    documento_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Sancion
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at', 'activo', 'deleted_at')
+
+    def get_empleado_nombre(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_persona:
+            p = obj.id_empleado.id_persona
+            return f"{p.primer_nombre} {p.primer_apellido}"
+        return ''
+
+    def get_empleado_servicio(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_servicio:
+            return obj.id_empleado.id_servicio.nombre
+        return ''
+
+    def get_empleado_ubicacion(self, obj):
+        return obj.id_empleado.ubicacion_fisica if obj.id_empleado else ''
+
+    def get_documento_url(self, obj):
+        if obj.documento:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.documento.url)
+            return obj.documento.url
+        return None

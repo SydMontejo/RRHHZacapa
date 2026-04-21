@@ -75,6 +75,18 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Persona no encontrada'}, status=404)
         except Empleado.DoesNotExist:
             return Response({'error': 'La persona existe pero no es empleado'}, status=404)
+        
+    @action(detail=False, methods=['get'])
+    def por_numero(self, request):
+        numero = request.query_params.get('numero')
+        if not numero:
+            return Response({'error': 'Se requiere número de empleado'}, status=400)
+        try:
+            empleado = Empleado.objects.get(numero_empleado=numero, activo=True, deleted_at__isnull=True)
+            serializer = self.get_serializer(empleado)
+            return Response(serializer.data)
+        except Empleado.DoesNotExist:
+            return Response({'error': 'Empleado no encontrado'}, status=404)
 
 class ContratoViewSet(viewsets.ModelViewSet):
     queryset = Contrato.objects.all().order_by('-fecha_inicio')
@@ -141,3 +153,33 @@ class VacacionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print("Datos recibidos:", serializer.validated_data)
         serializer.save()
+
+# views.py
+from rest_framework import viewsets, status, filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from django.utils import timezone
+from .models import Sancion
+from .serializers import SancionSerializer
+
+class SancionViewSet(viewsets.ModelViewSet):
+    queryset = Sancion.objects.filter(activo=True, deleted_at__isnull=True)
+    serializer_class = SancionSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['fecha_sancion']
+    search_fields = ['id_empleado__numero_empleado']
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        # Eliminación lógica
+        sancion = self.get_object()
+        sancion.activo = False
+        sancion.deleted_at = timezone.now()
+        sancion.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
