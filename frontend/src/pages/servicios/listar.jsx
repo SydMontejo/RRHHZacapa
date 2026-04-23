@@ -16,6 +16,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+ import { Link } from "react-router-dom";
 
 export default function ListarServicios() {
   const [servicios, setServicios] = useState([]);
@@ -137,6 +138,16 @@ export default function ListarServicios() {
       <Typography variant="h5" mb={2}>
         Servicios
       </Typography>
+
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button
+          variant="contained"
+          component={Link}
+          to="/dashboard/servicios/crear"
+        >
+          Crear Servicio
+        </Button>
+      </Box>
 
       <div style={{ height: 500, width: "100%" }}>
         <DataGrid

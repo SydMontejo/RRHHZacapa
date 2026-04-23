@@ -10,6 +10,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ListarPermisos() {
   const [tab, setTab] = useState(0);
@@ -77,8 +78,8 @@ export default function ListarPermisos() {
   };
 
   const columnsPendientes = [
-    { field: "id_permiso", headerName: "ID", width: 80 },
-    { field: "empleado_nombre", headerName: "Empleado", width: 200 },
+    //{ field: "id_permiso", headerName: "ID", width: 80 },
+    { field: "empleado_nombre_completo", headerName: "Empleado", width: 400 },
     { field: "motivo", headerName: "Motivo", width: 250 },
     { field: "fecha_solicitud", headerName: "Solicitud", width: 110 },
     { field: "fecha_requerida", headerName: "Requerida", width: 110 },
@@ -112,12 +113,20 @@ export default function ListarPermisos() {
   ];
 
   const columnsRevisados = [
-    { field: "id_permiso", headerName: "ID", width: 80 },
-    { field: "empleado_nombre", headerName: "Empleado", width: 200 },
+    //{ field: "id_permiso", headerName: "ID", width: 80 },
+    { field: "empleado_nombre_completo", headerName: "Empleado", width: 400 },
     { field: "motivo", headerName: "Motivo", width: 250 },
     { field: "fecha_solicitud", headerName: "Solicitud", width: 110 },
     { field: "fecha_requerida", headerName: "Requerida", width: 110 },
     { field: "dias_solicitados", headerName: "Días", width: 80, type: "number" },
+    {
+      field: "documento_url",
+      headerName: "Documento",
+      width: 100,
+      renderCell: (params) => params.value ? (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">Ver PDF</a>
+      ) : "N/A"
+    },
     {
       field: "estado",
       headerName: "Estado",
@@ -143,6 +152,16 @@ export default function ListarPermisos() {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h5" gutterBottom>Permisos</Typography>
+
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button
+          variant="contained"
+          component={Link}
+          to="/dashboard/empleados/crear"
+        >
+          Crear Empleados
+        </Button>
+      </Box>
 
       <Tabs value={tab} onChange={(e, newVal) => setTab(newVal)} sx={{ mb: 2 }}>
         <Tab label={`Pendientes (${pendientes.length})`} />

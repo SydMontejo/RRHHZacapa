@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import PermisoFilter
 from django.utils import timezone
+from django.db.models import Q
 from .models import Rol, Vacacion
 from .models import Renglon, Servicio, Persona, Empleado, Contrato, Permiso
 from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer, ContratoSerializer, PermisoSerializer, VacacionSerializer
@@ -87,6 +89,7 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Empleado.DoesNotExist:
             return Response({'error': 'Empleado no encontrado'}, status=404)
+        
 
 class ContratoViewSet(viewsets.ModelViewSet):
     queryset = Contrato.objects.all().order_by('-fecha_inicio')
@@ -114,6 +117,7 @@ class PermisoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['estado']
+    filterset_class = PermisoFilter
 
 class VacacionViewSet(viewsets.ModelViewSet):
     queryset = Vacacion.objects.all()

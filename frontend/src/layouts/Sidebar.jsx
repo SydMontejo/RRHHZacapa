@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import {
   Box,
   Typography,
@@ -79,13 +80,13 @@ export default function Sidebar() {
                   <ListItemText primary="Listar Usuarios" />
                 </ListItemButton>
 
-                <ListItemButton
+                {/* <ListItemButton
                   sx={{ pl: 4 }}
                   component={Link}
                   to="/dashboard/usuarios/crear"
                 >
                   <ListItemText primary="Crear Usuario" />
-                </ListItemButton>
+                </ListItemButton> */}
 
               </List>
             </Collapse>
@@ -113,13 +114,13 @@ export default function Sidebar() {
                   <ListItemText primary="Listar Renglones" />
                 </ListItemButton>
 
-                <ListItemButton
+                {/* <ListItemButton
                   sx={{ pl: 4 }}
                   component={Link}
                   to="/dashboard/renglones/crear"
                 >
                   <ListItemText primary="Crear Renglón" />
-                </ListItemButton>
+                </ListItemButton> */}
 
               </List>
             </Collapse>
@@ -145,13 +146,13 @@ export default function Sidebar() {
                 >
                   <ListItemText primary="Listar Servicios" />
                 </ListItemButton>
-                <ListItemButton
+                {/* <ListItemButton
                   sx={{ pl: 4 }}
                   component={Link}
                   to="/dashboard/servicios/crear"
                 >
                   <ListItemText primary="Crear Servicio" />
-                </ListItemButton>
+                </ListItemButton> */}
               </List>
             </Collapse>
 
@@ -172,9 +173,9 @@ export default function Sidebar() {
               <ListItemText primary="Listar Personas" />
             </ListItemButton>
 
-            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/personas/crear">
+            {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/personas/crear">
               <ListItemText primary="Crear Persona" />
-            </ListItemButton>
+            </ListItemButton> */}
 
           </List>
         </Collapse>
@@ -191,9 +192,9 @@ export default function Sidebar() {
               <ListItemText primary="Listar Empleado" />
             </ListItemButton>
 
-            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/empleados/crear">
+            {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/empleados/crear">
               <ListItemText primary="Crear Empleado" />
-            </ListItemButton>
+            </ListItemButton> */}
         </Collapse>
 
                 {/* ================= CONTRATOS ================= */}
@@ -208,9 +209,9 @@ export default function Sidebar() {
             <ListItemText primary="Listar Contrato" />
           </ListItemButton>
 
-          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/contratos/crear">
+          {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/contratos/crear">
             <ListItemText primary="Crear Contrato" />
-          </ListItemButton>
+          </ListItemButton> */}
         </Collapse>
         {/* ================= PERMISOS ================= */}
         <ListItemButton onClick={() => setOpenPermisos(!openPermisos)}>
@@ -222,9 +223,15 @@ export default function Sidebar() {
           <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/permisos">
             <ListItemText primary="Listar Permisos" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/permisos/crear">
+          {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/permisos/crear">
             <ListItemText primary="Solicitar Permiso" />
-          </ListItemButton>
+          </ListItemButton> */}
+          <ListItemButton component={Link} to="/dashboard/reportes/permisos">
+  <ListItemIcon sx={{ color: "white" }}><AssessmentIcon /></ListItemIcon>
+  <ListItemText primary="Reporte de Permisos" />
+</ListItemButton>
+
+          
         </Collapse>
 
         {/* Vacas */}
@@ -238,9 +245,9 @@ export default function Sidebar() {
           <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones">
             <ListItemText primary="Listar Solicitudes" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones/crear">
+          {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones/crear">
             <ListItemText primary="Solicitar Vacaciones" />
-          </ListItemButton>
+          </ListItemButton> */}
         </List>
       </Collapse>
         {/* =========================Sanciones============================ */}
@@ -254,9 +261,9 @@ export default function Sidebar() {
             <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/sanciones">
               <ListItemText primary="Listar Sanciones" />
             </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/sanciones/crear">
+            {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/sanciones/crear">
               <ListItemText primary="Registrar Sanción" />
-            </ListItemButton>
+            </ListItemButton> */}
           </List>
         </Collapse>
       </List>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function ListarContratos() {
 
@@ -15,8 +16,8 @@ export default function ListarContratos() {
   }, []);
 
   const columns = [
-    { field: "id_contrato", headerName: "ID", width: 80 },
-    { field: "empleado_nombre", headerName: "Empleado", width: 200 },
+    //{ field: "id_contrato", headerName: "ID", width: 80 },
+    { field: "empleado_nombre_completo", headerName: "Empleado", width: 400 },
     { field: "tipo_contrato", headerName: "Tipo", width: 100 },
     { field: "fecha_inicio", headerName: "Inicio", width: 120 },
     { field: "fecha_fin", headerName: "Fin", width: 120 },
@@ -25,6 +26,16 @@ export default function ListarContratos() {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h5">Contratos</Typography>
+
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button
+          variant="contained"
+          component={Link}
+          to="/dashboard/contratos/crear"
+        >
+          Crear Contrato
+        </Button>
+      </Box>
 
       <div style={{ height: 500 }}>
         <DataGrid

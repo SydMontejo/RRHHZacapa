@@ -2,9 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import {
   Box, Button, TextField, Typography, Grid, Paper,
-  Alert, CircularProgress
+  Alert, CircularProgress, Stack
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function CrearSancion() {
   const navigate = useNavigate();
@@ -89,80 +90,159 @@ export default function CrearSancion() {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, px: 2 }}>
-      <Paper sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom>Registrar Sanción</Typography>
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            {/* Búsqueda por número de empleado */}
-            <Grid item xs={12}>
-              <Box display="flex" gap={2} alignItems="center">
+  <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
+    <Paper sx={{ p: 4, borderRadius: 3 }}>
+      
+      <Typography variant="h5" fontWeight="bold" mb={3}>
+        Registrar Sanción
+      </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+
+          {/*Busqueda*/}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Buscar empleado
+            </Typography>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={8}>
                 <TextField
+                  fullWidth
                   label="Número de empleado"
                   value={numeroEmpleado}
                   onChange={(e) => setNumeroEmpleado(e.target.value)}
-                  fullWidth
+                  size="small"
                 />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
                 <Button
+                  fullWidth
                   variant="contained"
                   onClick={handleBuscarEmpleado}
                   disabled={buscando}
                 >
-                  {buscando ? <CircularProgress size={24} /> : "Buscar"}
+                  {buscando ? <CircularProgress size={20} /> : "Buscar"}
                 </Button>
-              </Box>
+              </Grid>
+
               {empleado && (
-                <Alert severity="success" sx={{ mt: 1 }}>
-                  {empleado.persona_nombre} - {empleado.numero_empleado}
-                </Alert>
+                <Grid item xs={12}>
+                  <Alert severity="success">
+                    {`${empleado.persona_detalle?.primer_nombre || ''} ${empleado.persona_detalle?.segundo_nombre || ''} ${empleado.persona_detalle?.tercer_nombre || ''} ${empleado.persona_detalle?.primer_apellido || ''} ${empleado.persona_detalle?.segundo_apellido || ''} ${empleado.persona_detalle?.apellido_casada || ''}`.replace(/\s+/g, ' ').trim()}
+                    {" - "}
+                    {empleado.persona_detalle?.dpi}
+                  </Alert>
+                </Grid>
               )}
             </Grid>
+          </Paper>
 
-            {/* Fecha sanción */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                required
-                type="date"
-                name="fecha_sancion"
-                label="Fecha de sanción"
-                value={form.fecha_sancion}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+          {/* Fecha*/}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Fecha de la sanción
+            </Typography>
+
+            <TextField
+              fullWidth
+              required
+              type="date"
+              name="fecha_sancion"
+              label="Fecha de sanción"
+              value={form.fecha_sancion}
+              onChange={handleChange}
+              InputLabelProps={{ shrink: true }}
+              size="small"
+            />
+          </Paper>
+
+          {/* Detalle*/}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Detalle de la sanción
+            </Typography>
+
+            <TextField
+              fullWidth
+              required
+              multiline
+              rows={4}
+              name="detalle"
+              label="Descripción (máx. 500 caracteres)"
+              value={form.detalle}
+              onChange={handleChange}
+              inputProps={{ maxLength: 500 }}
+            />
+          </Paper>
+
+          {/* Documenot*/}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Documento adjunto (opcional)
+            </Typography>
+
+            <Box
+              component="label"
+              sx={{
+                border: "2px dashed #ccc",
+                borderRadius: 2,
+                p: 3,
+                cursor: "pointer",
+
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+
+                minHeight: "120px",
+
+                transition: "0.2s",
+                "&:hover": {
+                  borderColor: "#1976d2",
+                  bgcolor: "#f8fafc",
+                },
+              }}
+            >
+              <CloudUploadIcon sx={{ fontSize: 36, color: "#6b7280" }} />
+
+              <Typography variant="body2" color="text.secondary">
+                {form.documento
+                  ? form.documento.name
+                  : "Haga clic para adjuntar un PDF"}
+              </Typography>
+
+              <input
+                type="file"
+                hidden
+                accept="application/pdf"
+                onChange={handleFileChange}
               />
-            </Grid>
+            </Box>
+          </Paper>
 
-            {/* Detalle */}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                required
-                multiline
-                rows={4}
-                name="detalle"
-                label="Detalle de la sanción (máx. 500 caracteres)"
-                value={form.detalle}
-                onChange={handleChange}
-                inputProps={{ maxLength: 500 }}
-              />
-            </Grid>
+          {/* Botones */}
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate("/dashboard/sanciones")}
+            >
+              Cancelar
+            </Button>
 
-            {/* Documento opcional */}
-            <Grid item xs={12}>
-              <Button variant="outlined" component="label" fullWidth>
-                Subir documento (PDF opcional)
-                <input type="file" hidden accept="application/pdf" onChange={handleFileChange} />
-              </Button>
-              {form.documento && <Typography variant="caption">{form.documento.name}</Typography>}
-            </Grid>
-          </Grid>
-          <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
-            <Button variant="outlined" onClick={() => navigate("/dashboard/sanciones")}>Cancelar</Button>
-            <Button type="submit" variant="contained">Registrar Sanción</Button>
+            <Button type="submit" variant="contained">
+              Registrar sanción
+            </Button>
           </Box>
-        </form>
-      </Paper>
-    </Box>
-  );
+
+        </Stack>
+      </form>
+    </Paper>
+  </Box>
+);
 }

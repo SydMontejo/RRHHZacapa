@@ -1,21 +1,3 @@
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Login from "./pages/Login";
-// import Dashboard from "./pages/Dashboard";
-// import Layout from "./layouts/Layout";
-
-// function App() {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/dashboard" element={<Layout/>} />
-//           <Route path="usuarios" element={<Dashboard />} />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-// export default App;
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -42,6 +24,7 @@ import DetalleVacacion from "./pages/vacaciones/detalle";
 import Home from "./pages/Home";
 import CrearSancion from "./pages/sanciones/crear";
 import ListarSanciones from "./pages/sanciones/listar";
+import PermisosReporte from "./pages/reportes/PermisosReporte";
 function App() {
   return (
     <BrowserRouter>
@@ -74,6 +57,7 @@ function App() {
           <Route path="vacaciones/:id" element={<DetalleVacacion />} />
           <Route path="sanciones" element={<ListarSanciones />} />
           <Route path="sanciones/crear" element={<CrearSancion />} />
+          <Route path="reportes/permisos" element={<PermisosReporte />} />
         </Route>
       </Routes>
     </BrowserRouter>

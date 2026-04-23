@@ -101,6 +101,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 //import api from "../../api/axios";
 import axios from "axios"
+import { Link } from "react-router-dom";
 
 export default function ListarRenglones() {
 
@@ -225,6 +226,16 @@ export default function ListarRenglones() {
       <Typography variant="h5" mb={2}>
         Renglones
       </Typography>
+
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button
+          variant="contained"
+          component={Link}
+          to="/dashboard/renglones/crear"
+        >
+          Crear Renglón
+        </Button>
+      </Box>
 
       <div style={{ height: 500, width: "100%" }}>
         <DataGrid

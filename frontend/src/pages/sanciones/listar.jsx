@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   Box, Typography, IconButton, TextField, Button, Dialog,
-  DialogTitle, DialogContent, DialogActions, Alert, CircularProgress
+  DialogTitle, DialogContent, DialogActions, Alert, CircularProgress, Paper
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function ListarSanciones() {
   const [sanciones, setSanciones] = useState([]);
@@ -83,78 +84,139 @@ export default function ListarSanciones() {
   ];
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h5">Sanciones</Typography>
+  <Box sx={{ maxWidth: 1100, mx: "auto", mt: 4, px: 2 }}>
 
-      {/* Filtros */}
-      <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap" }}>
-        <TextField
-          label="Número de empleado"
-          value={filtroNumero}
-          onChange={(e) => setFiltroNumero(e.target.value)}
-          size="small"
-        />
-        <TextField
-          label="Fecha inicio"
-          type="date"
-          value={filtroFechaInicio}
-          onChange={(e) => setFiltroFechaInicio(e.target.value)}
-          size="small"
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label="Fecha fin"
-          type="date"
-          value={filtroFechaFin}
-          onChange={(e) => setFiltroFechaFin(e.target.value)}
-          size="small"
-          InputLabelProps={{ shrink: true }}
-        />
-        <Button variant="outlined" onClick={() => {
-          setFiltroNumero("");
-          setFiltroFechaInicio("");
-          setFiltroFechaFin("");
-        }}>
-          Limpiar
+    <Paper sx={{ p: 3, borderRadius: 3 }}>
+      
+      {/* Header*/}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h5" fontWeight="bold">
+          Sanciones
+        </Typography>
+
+        <Button
+          variant="contained"
+          component={Link}
+          to="/dashboard/sanciones/crear"
+        >
+          + Crear sanción
         </Button>
       </Box>
 
-      {error && <Alert severity="error">{error}</Alert>}
+      {/* Filtros*/}
+      <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 2 }}>
+        <Typography variant="subtitle2" fontWeight={600} mb={2}>
+          Filtros
+        </Typography>
 
-      <div style={{ height: 500 }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            flexWrap: "wrap",
+            alignItems: "center"
+          }}
+        >
+          <TextField
+            label="Número de empleado"
+            value={filtroNumero}
+            onChange={(e) => setFiltroNumero(e.target.value)}
+            size="small"
+          />
+
+          <TextField
+            label="Fecha inicio"
+            type="date"
+            value={filtroFechaInicio}
+            onChange={(e) => setFiltroFechaInicio(e.target.value)}
+            size="small"
+            InputLabelProps={{ shrink: true }}
+          />
+
+          <TextField
+            label="Fecha fin"
+            type="date"
+            value={filtroFechaFin}
+            onChange={(e) => setFiltroFechaFin(e.target.value)}
+            size="small"
+            InputLabelProps={{ shrink: true }}
+          />
+
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setFiltroNumero("");
+              setFiltroFechaInicio("");
+              setFiltroFechaFin("");
+            }}
+          >
+            Limpiar
+          </Button>
+        </Box>
+      </Paper>
+
+      {/* Error*/}
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+      {/* Grid*/}
+      <Box sx={{ height: 500 }}>
         <DataGrid
           rows={sanciones}
           columns={columns}
           getRowId={(row) => row.id_sancion}
           loading={loading}
+          sx={{
+            borderRadius: 2,
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#f1f5f9",
+              fontWeight: "bold",
+            },
+          }}
         />
-      </div>
+      </Box>
+    </Paper>
 
-      {/* Modal de detalle */}
-      <Dialog open={openDetalle} onClose={() => setOpenDetalle(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Detalle de Sanción</DialogTitle>
-        <DialogContent dividers>
-          {sancionSeleccionada && (
-            <Box>
-              <Typography><strong>Empleado:</strong> {sancionSeleccionada.empleado_nombre}</Typography>
-              <Typography><strong>Servicio:</strong> {sancionSeleccionada.empleado_servicio || "N/A"}</Typography>
-              <Typography><strong>Ubicación física:</strong> {sancionSeleccionada.empleado_ubicacion || "N/A"}</Typography>
-              <Typography><strong>Fecha sanción:</strong> {sancionSeleccionada.fecha_sancion}</Typography>
-              <Typography><strong>Detalle:</strong> {sancionSeleccionada.detalle}</Typography>
-              {sancionSeleccionada.documento_url && (
-                <Typography>
-                  <a href={sancionSeleccionada.documento_url} target="_blank" rel="noreferrer">
-                    Ver documento adjunto
-                  </a>
-                </Typography>
-              )}
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDetalle(false)}>Cerrar</Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
+    {/* Modal de Detalle*/}
+    <Dialog
+      open={openDetalle}
+      onClose={() => setOpenDetalle(false)}
+      maxWidth="md"
+      fullWidth
+    >
+      <DialogTitle sx={{ fontWeight: "bold" }}>
+        Detalle de sanción
+      </DialogTitle>
+
+      <DialogContent dividers>
+        {sancionSeleccionada && (
+          <Stack spacing={1}>
+            <Typography><strong>Empleado:</strong> {sancionSeleccionada.empleado_nombre}</Typography>
+            <Typography><strong>Servicio:</strong> {sancionSeleccionada.empleado_servicio || "N/A"}</Typography>
+            <Typography><strong>Ubicación:</strong> {sancionSeleccionada.empleado_ubicacion || "N/A"}</Typography>
+            <Typography><strong>Fecha:</strong> {sancionSeleccionada.fecha_sancion}</Typography>
+            <Typography><strong>Detalle:</strong> {sancionSeleccionada.detalle}</Typography>
+
+            {sancionSeleccionada.documento_url && (
+              <Button
+                href={sancionSeleccionada.documento_url}
+                target="_blank"
+                variant="outlined"
+                sx={{ mt: 1, width: "fit-content" }}
+              >
+                Ver documento
+              </Button>
+            )}
+          </Stack>
+        )}
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={() => setOpenDetalle(false)}>
+          Cerrar
+        </Button>
+      </DialogActions>
+    </Dialog>
+
+  </Box>
+);
 }

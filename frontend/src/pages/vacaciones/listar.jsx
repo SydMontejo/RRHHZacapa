@@ -4,13 +4,14 @@ import axios from "axios";
 import {
   Box, Typography, Chip, IconButton, Tab, Tabs,
   Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Button, Alert, CircularProgress
+  TextField, Button, Alert, CircularProgress, Paper
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ListarVacaciones() {
   const [tab, setTab] = useState(0);
@@ -37,6 +38,7 @@ export default function ListarVacaciones() {
       const todos = response.data;
       setPendientes(todos.filter(v => v.estado === "PENDIENTE"));
       setRevisados(todos.filter(v => v.estado === "APROBADO" || v.estado === "RECHAZADO"));
+      
     } catch (err) {
       setError("Error al cargar los datos");
     } finally {
@@ -202,82 +204,147 @@ export default function ListarVacaciones() {
   if (loading) return <CircularProgress />;
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h5" gutterBottom>Vacaciones</Typography>
+  <Box sx={{ maxWidth: 1100, mx: "auto", mt: 4, px: 2 }}>
 
-      <Tabs value={tab} onChange={(e, newVal) => setTab(newVal)} sx={{ mb: 2 }}>
-        <Tab label={`Pendientes (${pendientes.length})`} />
-        <Tab label={`Revisados (${revisados.length})`} />
-      </Tabs>
+    <Paper sx={{ p: 3, borderRadius: 3 }}>
 
+      {/* Header */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h5" fontWeight="bold">
+          Vacaciones
+        </Typography>
+
+        <Button
+          variant="contained"
+          component={Link}
+          to="/dashboard/vacaciones/crear"
+        >
+          Solicitar vacaciones
+        </Button>
+      </Box>
+
+      {/* Tabs */}
+      <Paper variant="outlined" sx={{ borderRadius: 2, mb: 3 }}>
+        <Tabs
+          value={tab}
+          onChange={(e, newVal) => setTab(newVal)}
+          sx={{ px: 2 }}
+        >
+          <Tab label={`Pendientes (${pendientes.length})`} />
+          <Tab label={`Revisados (${revisados.length})`} />
+        </Tabs>
+      </Paper>
+
+      {/* Error */}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      <div style={{ height: 500 }}>
+      {/* Tabla */}
+      <Box sx={{ height: 500 }}>
         {tab === 0 ? (
           <DataGrid
             rows={pendientes}
             columns={columnsPendientes}
             getRowId={(row) => row.id_vacacion}
+            sx={{
+              borderRadius: 2,
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#f1f5f9",
+                fontWeight: "bold",
+              },
+            }}
           />
         ) : (
           <DataGrid
             rows={revisados}
             columns={columnsRevisados}
             getRowId={(row) => row.id_vacacion}
+            sx={{
+              borderRadius: 2,
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#f1f5f9",
+                fontWeight: "bold",
+              },
+            }}
           />
         )}
-      </div>
+      </Box>
 
-      {/* Diálogo para aprobar/rechazar/modificar */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>
-          {accion === "APROBADO" && "Aprobar solicitud de vacaciones"}
-          {accion === "RECHAZADO" && "Rechazar solicitud de vacaciones"}
-          {accion === "MODIFICAR" && "Modificar fechas de vacaciones"}
-        </DialogTitle>
-        <DialogContent>
-          {accion === "MODIFICAR" ? (
-            <>
-              <TextField
-                margin="dense"
-                label="Nueva fecha inicio"
-                type="date"
-                fullWidth
-                value={nuevasFechas.fecha_inicio}
-                onChange={(e) => setNuevasFechas({ ...nuevasFechas, fecha_inicio: e.target.value })}
-                InputLabelProps={{ shrink: true }}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                margin="dense"
-                label="Nueva fecha fin"
-                type="date"
-                fullWidth
-                value={nuevasFechas.fecha_fin}
-                onChange={(e) => setNuevasFechas({ ...nuevasFechas, fecha_fin: e.target.value })}
-                InputLabelProps={{ shrink: true }}
-              />
-            </>
-          ) : (
+    </Paper>
+
+    {/* Dialogo */}
+    <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+      
+      <DialogTitle sx={{ fontWeight: "bold" }}>
+        {accion === "APROBADO" && "Aprobar solicitud de vacaciones"}
+        {accion === "RECHAZADO" && "Rechazar solicitud de vacaciones"}
+        {accion === "MODIFICAR" && "Modificar fechas de vacaciones"}
+      </DialogTitle>
+
+      <DialogContent dividers>
+        {accion === "MODIFICAR" ? (
+          <Stack spacing={2}>
             <TextField
-              autoFocus
-              margin="dense"
-              label="Observaciones (opcional)"
+              label="Nueva fecha inicio"
+              type="date"
               fullWidth
-              multiline
-              rows={3}
-              value={observaciones}
-              onChange={(e) => setObservaciones(e.target.value)}
+              value={nuevasFechas.fecha_inicio}
+              onChange={(e) =>
+                setNuevasFechas({
+                  ...nuevasFechas,
+                  fecha_inicio: e.target.value,
+                })
+              }
+              InputLabelProps={{ shrink: true }}
             />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
-          <Button onClick={handleConfirmar} variant="contained" color={accion === "APROBADO" ? "success" : accion === "RECHAZADO" ? "error" : "primary"}>
-            Confirmar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
+
+            <TextField
+              label="Nueva fecha fin"
+              type="date"
+              fullWidth
+              value={nuevasFechas.fecha_fin}
+              onChange={(e) =>
+                setNuevasFechas({
+                  ...nuevasFechas,
+                  fecha_fin: e.target.value,
+                })
+              }
+              InputLabelProps={{ shrink: true }}
+            />
+          </Stack>
+        ) : (
+          <TextField
+            label="Observaciones (opcional)"
+            fullWidth
+            multiline
+            rows={3}
+            value={observaciones}
+            onChange={(e) => setObservaciones(e.target.value)}
+          />
+        )}
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={() => setOpenDialog(false)}>
+          Cancelar
+        </Button>
+
+        <Button
+          onClick={handleConfirmar}
+          variant="contained"
+          color={
+            accion === "APROBADO"
+              ? "success"
+              : accion === "RECHAZADO"
+              ? "error"
+              : "primary"
+          }
+        >
+          Confirmar
+        </Button>
+      </DialogActions>
+
+    </Dialog>
+
+  </Box>
+);
 }

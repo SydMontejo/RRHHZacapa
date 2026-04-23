@@ -8,7 +8,7 @@ import {
   Typography,
   Alert,
   Switch,
-  FormControlLabel
+  FormControlLabel, Paper, Stack, Grid
 } from "@mui/material";
 
 export default function CrearPersona() {
@@ -103,45 +103,162 @@ export default function CrearPersona() {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 500, mx: "auto", mt: 4 }}>
-      <Typography variant="h5">Crear Persona</Typography>
+  <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
+    
+    <Paper sx={{ p: 4, borderRadius: 3 }}>
+      <Typography variant="h5" fontWeight="bold" mb={3}>
+        Crear Persona
+      </Typography>
 
-      {error && <Alert severity="error">{error}</Alert>}
-      {success && <Alert severity="success">{success}</Alert>}
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
-      <TextField fullWidth label="Primer Nombre" name="primer_nombre" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Segundo Nombre" name="segundo_nombre" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Tercer Nombre" name="tercer_nombre" onChange={handleChange} margin="normal" />
-      <TextField fullWidth label="Primer Apellido" name="primer_apellido" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Segundo Apellido" name="segundo_apellido" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Tercer Apellido" name="tercer_apellido" onChange={handleChange} margin="normal" />
-      <TextField fullWidth label="Apellido de Casada" name="apellido_casada" onChange={handleChange} margin="normal"  />
-      <TextField fullWidth label="DPI" name="dpi" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="NIT" name="nit" onChange={handleChange} margin="normal" required/>
-      <TextField fullWidth label="Correo" name="correo" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Teléfono" name="telefono" onChange={handleChange} margin="normal" />
-      <TextField fullWidth label="Dirección" name="direccion" onChange={handleChange} margin="normal" />
-      <TextField fullWidth label="Departameto" name="departamento" onChange={handleChange} margin="normal" required />
-      <TextField fullWidth label="Municipio" name="municipio" onChange={handleChange} margin="normal" required />
-      
+      <Box component="form" onSubmit={handleSubmit}>
+        <Stack spacing={3}>
 
-      <input type="file" onChange={handleFileChange} />
+          {/* NOMBRES */}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Nombres
+            </Typography>
 
-      <FormControlLabel
-        control={
-          <Switch
-            checked={form.activo}
-            onChange={(e) =>
-              setForm({ ...form, activo: e.target.checked })
-            }
-          />
-        }
-        label="Activo"
-      />
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={4}>
+                <TextField fullWidth label="Primer Nombre" name="primer_nombre" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField fullWidth label="Segundo Nombre" name="segundo_nombre" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField fullWidth label="Tercer Nombre" name="tercer_nombre" onChange={handleChange} size="small" />
+              </Grid>
+            </Grid>
+          </Paper>
 
-      <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-        Guardar
-      </Button>
-    </Box>
-  );
+          {/* APELLIDOS */}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Apellidos
+            </Typography>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={4}>
+                <TextField fullWidth label="Primer Apellido" name="primer_apellido" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField fullWidth label="Segundo Apellido" name="segundo_apellido" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField fullWidth label="Apellido de Casada" name="apellido_casada" onChange={handleChange} size="small" />
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* IDENTIFICACIÓN */}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Identificación
+            </Typography>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <TextField fullWidth label="DPI" name="dpi" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField fullWidth label="NIT" name="nit" onChange={handleChange} required size="small" />
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* CONTACTO */}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Información de contacto
+            </Typography>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <TextField fullWidth label="Correo" name="correo" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField fullWidth label="Teléfono" name="telefono" onChange={handleChange} size="small" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Dirección" name="direccion" onChange={handleChange} size="small" multiline rows={5} />
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* UBICACIÓN */}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Ubicación
+            </Typography>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <TextField fullWidth label="Departamento" name="departamento" onChange={handleChange} required size="small" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField fullWidth label="Municipio" name="municipio" onChange={handleChange} required size="small" />
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* FOTO */}
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={2}>
+              Foto
+            </Typography>
+
+            <Box
+              component="label"
+              sx={{
+                border: "2px dashed #ccc",
+                borderRadius: 2,
+                p: 3,
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 1,
+                minHeight: "100px",
+                "&:hover": { borderColor: "#1976d2", bgcolor: "#f8fafc" },
+              }}
+            >
+              <Typography variant="body2">
+                Seleccionar fotografia
+              </Typography>
+
+              <input type="file" hidden onChange={handleFileChange} />
+            </Box>
+          </Paper>
+
+          {/* ESTADO */}
+          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={form.activo}
+                  onChange={(e) =>
+                    setForm({ ...form, activo: e.target.checked })
+                  }
+                />
+              }
+              label="Activo"
+            />
+          </Paper>
+
+          {/* BOTÓN */}
+          <Box display="flex" justifyContent="flex-end">
+            <Button type="submit" variant="contained">
+              Guardar
+            </Button>
+          </Box>
+
+        </Stack>
+      </Box>
+    </Paper>
+  </Box>
+);
 }
