@@ -63,8 +63,10 @@ export default function PermisosReporte() {
       return;
     }
     const datosExportar = data.map(item => ({
-      ID: item.id_permiso,
-      Empleado: `${item.empleado_nombre || ''} ${item.empleado_apellido || ''}`.trim(),
+      "Numero de Empleado": item.empleado_numero || '',
+      "Empleado": item.empleado_nombre_completo || '',
+      "Ubicaion Fisica": item.empleado_ubicacion || '',
+      "Servicio": item.empleado_ubicacion || '',
       Motivo: item.motivo,
       "Fecha solicitud": item.fecha_solicitud,
       "Fecha requerida": item.fecha_requerida,

@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import {
   Box, Typography, IconButton, Dialog, DialogTitle,
   DialogContent, TextField, DialogActions, Button,
-  Snackbar, Alert, Switch, FormControlLabel, Paper, Stack
+  Snackbar, Alert, Switch, FormControlLabel, Paper, Stack, MenuItem
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 
 export default function ListarPersonas() {
@@ -281,6 +284,36 @@ export default function ListarPersonas() {
             label="Municipio"
             fullWidth
             value={personaEdit?.municipio || ""}
+            onChange={handleChange}
+          />
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha de nacimiento"
+              value={personaEdit?.fecha_nacimiento ? dayjs(personaEdit.fecha_nacimiento) : null}
+              onChange={(newValue) => setPersonaEdit({ ...personaEdit, fecha_nacimiento: newValue ? newValue.format("YYYY-MM-DD") : null })}
+              slotProps={{ textField: { fullWidth: true, size: "small" } }}
+            />
+          </LocalizationProvider>
+
+          <TextField
+            select
+            fullWidth
+            label="Género"
+            name="genero"
+            value={personaEdit?.genero || ""}
+            onChange={handleChange}
+            size="small"
+          >
+            <MenuItem value="M">Masculino</MenuItem>
+            <MenuItem value="F">Femenino</MenuItem>
+          </TextField>
+
+          <TextField
+            fullWidth
+            label="Nivel académico"
+            name="nivel_academico"
+            value={personaEdit?.nivel_academico || ""}
             onChange={handleChange}
           />
 

@@ -14,7 +14,7 @@ import {
   Alert,
   MenuItem,
   Switch,
-  FormControlLabel, Paper, Stack
+  FormControlLabel, Paper, Stack, InputAdornment
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
@@ -129,6 +129,7 @@ export default function ListarEmpleados() {
           comisionado_seccion_nombre: empleadoEdit.comisionado_seccion_nombre,
           comisionado_seccion_numero: empleadoEdit.comisionado_seccion_numero,
           activo: empleadoEdit.activo,
+          salario: empleadoEdit.salario,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -174,6 +175,15 @@ export default function ListarEmpleados() {
       headerName: "Activo",
       width: 100,
       renderCell: (p) => (p.value ? "Sí" : "No"),
+    },
+    {
+      field: "salario",
+      headerName: "Salario (Q)",
+      width: 120,
+      valueFormatter: (params) => {
+        if (params.value === null || params.value === undefined) return "N/A";
+        return new Intl.NumberFormat("es-GT", { style: "currency", currency: "GTQ" }).format(params.value);
+      }
     },
     {
       field: "acciones",
@@ -327,6 +337,18 @@ export default function ListarEmpleados() {
             size="small"
           />
 
+          <TextField
+            label="Salario (Q)"
+            name="salario"
+            type="number"
+            step="0.01"
+            value={empleadoEdit?.salario ?? ""}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+            InputProps={{ startAdornment: <InputAdornment position="start">Q</InputAdornment> }}
+          />
+
           <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
             <FormControlLabel
               control={
@@ -409,6 +431,7 @@ export default function ListarEmpleados() {
                 <Typography><strong>Ubicación:</strong> {empleadoDetalle.ubicacion_fisica || 'N/A'}</Typography>
                 <Typography><strong>Fecha:</strong> {empleadoDetalle.fecha_contratacion || 'N/A'}</Typography>
                 <Typography><strong>Activo:</strong> {empleadoDetalle.activo ? 'Sí' : 'No'}</Typography>
+                <Typography><strong>Salario:</strong> {empleadoDetalle.salario ? `Q ${empleadoDetalle.salario.toFixed(2)}` : 'N/A'}</Typography>
               </Paper>
 
               <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>

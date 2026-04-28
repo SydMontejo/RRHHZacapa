@@ -9,6 +9,7 @@ from .models import Empleado
 from .models import Contrato
 from .models import Permiso
 from .models import Vacacion
+from .models import MovimientoPersonal
 from datetime import date
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,8 +40,8 @@ class PersonaSerializer(serializers.ModelSerializer):
         return value
 
 class EmpleadoSerializer(serializers.ModelSerializer):
-    queryset = Empleado.objects.all() 
-    
+    queryset = Empleado.objects.all()
+
     search_fields = ['numero_empleado','id_persona__dpi', 'id_persona__primer_nombre']
     persona_nombre = serializers.SerializerMethodField()
     renglon_codigo = serializers.CharField(source='id_renglon.codigo', read_only=True)
@@ -68,7 +69,7 @@ class EmpleadoSerializer(serializers.ModelSerializer):
             apellidos += f" {p.apellido_casada}"
         # return f"{p.primer_nombre} {p.primer_apellido}"
         return f"{nombres} {apellidos}"
-    
+
     def validate_id_persona(self, value):
         if self.instance:
             existe = Empleado.objects.filter(id_persona=value).exclude(pk=self.instance.pk).exists()
@@ -78,7 +79,7 @@ class EmpleadoSerializer(serializers.ModelSerializer):
         if existe:
             raise serializers.ValidationError("Esta persona ya es empleado")
         return value
-    
+
     def get_foto_persona(self, obj):
         if obj.id_persona and obj.id_persona.foto:
             request = self.context.get('request')
@@ -86,7 +87,7 @@ class EmpleadoSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.id_persona.foto.url)
             return obj.id_persona.foto.url
         return None
-    
+
     def destroy(self, request, *args, **kwargs):
         empleado = self.get_object()
         # Eliminación lógica: marcar como inactivo y guardar fecha
@@ -124,23 +125,28 @@ class PermisoSerializer(serializers.ModelSerializer):
     #empleado_nombre = serializers.SerializerMethodField()
     #empleado_apellido = serializers.SerializerMethodField()
     empleado_nombre_completo = serializers.SerializerMethodField()
+    empleado_numero =  serializers.SerializerMethodField()
+    empleado_ubicacion = serializers.SerializerMethodField()
+    empleado_servicio = serializers.SerializerMethodField()
     documento_url = serializers.SerializerMethodField()
+
+
 
     class Meta:
         model = Permiso
         fields = '__all__'
         read_only_fields = ('fecha_solicitud', 'created_at', 'updated_at')
 
-    def get_empleado_nombre(self, obj):
-        if obj.id_empleado and obj.id_empleado.id_persona:
-            return obj.id_empleado.id_persona.primer_nombre
-        return ''
+    # def get_empleado_nombre(self, obj):
+    #     if obj.id_empleado and obj.id_empleado.id_persona:
+    #         return obj.id_empleado.id_persona.primer_nombre
+    #     return ''
 
-    def get_empleado_apellido(self, obj):
-        if obj.id_empleado and obj.id_empleado.id_persona:
-            return obj.id_empleado.id_persona.primer_apellido
-        return ''
-    
+    # def get_empleado_apellido(self, obj):
+    #     if obj.id_empleado and obj.id_empleado.id_persona:
+    #         return obj.id_empleado.id_persona.primer_apellido
+    #     return ''
+
     def get_empleado_nombre_completo(self, obj):
         if not obj.id_empleado or not obj.id_empleado.id_persona:
             return ''
@@ -156,6 +162,21 @@ class PermisoSerializer(serializers.ModelSerializer):
         if p.apellido_casada:
             apellidos += f" {p.apellido_casada}"
         return f"{nombres} {apellidos}".strip()
+    
+    def get_empleado_numero(self, obj):
+        if obj.id_empleado:
+            return obj.id_empleado.numero_empleado
+        return ''
+    
+    def get_empleado_ubicacion(self, obj):
+        if obj.id_empleado:
+            return obj.id_empleado.ubicacion_fisica or ''
+        return ''
+    
+    def get_empleado_servicio(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_servicio:
+            return obj.id_empleado.id_servicio.nombre
+        return ''
 
     def get_documento_url(self, obj):
         if obj.documento:
@@ -169,7 +190,7 @@ class PermisoSerializer(serializers.ModelSerializer):
         if value < 1:
             raise serializers.ValidationError("Los días solicitados deben ser al menos 1.")
         return value
-    
+
 class VacacionSerializer(serializers.ModelSerializer):
     empleado_nombre = serializers.SerializerMethodField()
     empleado_apellido = serializers.SerializerMethodField()
@@ -251,3 +272,32 @@ class SancionSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.documento.url)
             return obj.documento.url
         return None
+    
+class MovimientoPersonalSerializer(serializers.ModelSerializer):
+    empleado_nombre_completo = serializers.SerializerMethodField()
+    empleado_numero = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MovimientoPersonal
+        fields = '__all__'
+
+    def get_empleado_nombre_completo(self, obj):
+        if obj.id_empleado and obj.id_empleado.id_persona:
+            p = obj.id_empleado.id_persona
+            nombres = p.primer_nombre
+            if p.segundo_nombre:
+                nombres += f" {p.segundo_nombre}"
+            if p.tercer_nombre:
+                nombres += f" {p.tercer_nombre}"
+            apellidos = p.primer_apellido
+            if p.segundo_apellido:
+                apellidos += f" {p.segundo_apellido}"
+            if p.apellido_casada:
+                apellidos += f" {p.apellido_casada}"
+            return f"{nombres} {apellidos}".strip()
+        return ''
+
+    def get_empleado_numero(self, obj):
+        if obj.id_empleado:
+            return obj.id_empleado.numero_empleado
+        return ''

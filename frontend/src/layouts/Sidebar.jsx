@@ -25,6 +25,7 @@ import {  ExpandLess,
   } from "@mui/icons-material";
 
 import GavelIcon from "@mui/icons-material/Gavel"
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 export default function Sidebar() {
 
@@ -39,6 +40,7 @@ export default function Sidebar() {
   const [openPermisos, setOpenPermisos] = useState(false);
   const [openVacaciones, setOpenVacaciones] = useState(false);
   const [openSanciones, setOpenSanciones] = useState(false);
+  const [openMovimientos, setOpenMovimientos] = useState(false);
 
   return (
     <Box
@@ -227,9 +229,9 @@ export default function Sidebar() {
             <ListItemText primary="Solicitar Permiso" />
           </ListItemButton> */}
           <ListItemButton component={Link} to="/dashboard/reportes/permisos">
-  <ListItemIcon sx={{ color: "white" }}><AssessmentIcon /></ListItemIcon>
-  <ListItemText primary="Reporte de Permisos" />
-</ListItemButton>
+            <ListItemIcon sx={{ color: "white" }}><AssessmentIcon /></ListItemIcon>
+            <ListItemText primary="Reporte de Permisos" />
+          </ListItemButton>
 
           
         </Collapse>
@@ -266,6 +268,23 @@ export default function Sidebar() {
             </ListItemButton> */}
           </List>
         </Collapse>
+              {/* =========================Movimientos============================ */}
+          <ListItemButton onClick={() => setOpenMovimientos(!openMovimientos)}>
+            <ListItemIcon sx={{ color: "white" }}><SwapHorizIcon /></ListItemIcon>
+            <ListItemText primary="Movimientos" />
+            {openMovimientos ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={openMovimientos}>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/movimientos">
+                <ListItemText primary="Listar Movimientos" />
+              </ListItemButton>
+              {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/movimientos/crear">
+                <ListItemText primary="Registrar Movimiento" />
+              </ListItemButton> */}
+            </List>
+          </Collapse>
+
       </List>
     </Box>
   );

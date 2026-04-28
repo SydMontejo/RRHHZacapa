@@ -71,6 +71,9 @@ class Persona(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    genero = models.CharField(max_length=10, choices=[('M','Masculino'),('F', 'Femenino')], blank=True, null=True)
+    nivel_academico = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f"{self.primer_nombre} {self.primer_apellido}"
@@ -122,7 +125,7 @@ class Empleado(models.Model):
     comisionado_seccion_nombre = models.CharField(max_length=100, null=True, blank=True)
 
     activo = models.BooleanField(default=True)
-
+    salario = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.00)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -195,6 +198,7 @@ class Permiso(models.Model):
     observaciones = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    autorizado_por = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         db_table = 'permisos'
@@ -251,3 +255,23 @@ class Sancion(models.Model):
 
     def __str__(self):
         return f"Sanción {self.id_sancion} - {self.id_empleado.numero_empleado}"
+    
+class MovimientoPersonal(models.Model):
+    TIPO_CHOICES = (
+        ('ENTREGA_PUESTO', 'Entrega de Puesto'),
+        ('TOMA_PUESTO', 'Toma de Puesto'),
+    )
+    id_movimiento = models.AutoField(primary_key=True)
+    id_empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, db_column='id_empleado')
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    fecha_efectiva = models.DateField()
+    descripcion = models.TextField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'movimientos_personal'
+        ordering = ['-fecha_efectiva']
+
+    def __str__(self):
+        return f"{self.tipo} - {self.id_empleado} - {self.fecha_efectiva}"

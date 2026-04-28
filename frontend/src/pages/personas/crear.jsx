@@ -8,8 +8,15 @@ import {
   Typography,
   Alert,
   Switch,
-  FormControlLabel, Paper, Stack, Grid
+  FormControlLabel,
+  Paper,
+  Stack,
+  Grid,
+  MenuItem,
 } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 export default function CrearPersona() {
   const navigate = useNavigate();
@@ -17,21 +24,23 @@ export default function CrearPersona() {
 
   const [form, setForm] = useState({
     primer_nombre: "",
-    segundo_nombre:"",
-    tercer_nombre:"",
+    segundo_nombre: "",
+    tercer_nombre: "",
     primer_apellido: "",
-    segundo_apellido:"",
-    tercer_apellido:"",
-    apellido_casada:"",
+    segundo_apellido: "",
+    apellido_casada: "",
     dpi: "",
     correo: "",
     telefono: "",
     direccion: "",
-    departamento:"",
-    municipio:"",
+    departamento: "",
+    municipio: "",
     nit: "",
     activo: true,
-    foto: null
+    foto: null,
+    fecha_nacimiento: null,
+    genero: "",
+    nivel_academico: "",
   });
 
   const [error, setError] = useState(null);
@@ -71,29 +80,27 @@ export default function CrearPersona() {
     const formData = new FormData();
 
     Object.keys(form).forEach((key) => {
-      if (form[key] !== null) {
-        formData.append(key, form[key]);
+      if (form[key] !== null && form[key] !== "") {
+        if (key === "fecha_nacimiento" && form[key]) {
+          formData.append(key, dayjs(form[key]).format("YYYY-MM-DD"));
+        } else {
+          formData.append(key, form[key]);
+        }
       }
     });
 
     try {
-      await axios.post(
-        "http://127.0.0.1:8000/api/personas/",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post("http://127.0.0.1:8000/api/personas/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setSuccess("Persona creada correctamente");
       setTimeout(() => navigate("/dashboard/personas"), 1500);
-
     } catch (error) {
       console.error(error);
-
       if (error.response?.data) {
         setError(JSON.stringify(error.response.data));
       } else {
@@ -103,162 +110,191 @@ export default function CrearPersona() {
   };
 
   return (
-  <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
-    
-    <Paper sx={{ p: 4, borderRadius: 3 }}>
-      <Typography variant="h5" fontWeight="bold" mb={3}>
-        Crear Persona
-      </Typography>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
+        <Paper sx={{ p: 4, borderRadius: 3 }}>
+          <Typography variant="h5" fontWeight="bold" mb={3}>
+            Crear Persona
+          </Typography>
 
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
-      <Box component="form" onSubmit={handleSubmit}>
-        <Stack spacing={3}>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Stack spacing={3}>
+              {/* NOMBRES */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Nombres
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <TextField fullWidth label="Primer Nombre" name="primer_nombre" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField fullWidth label="Segundo Nombre" name="segundo_nombre" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField fullWidth label="Tercer Nombre" name="tercer_nombre" onChange={handleChange} size="small" />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-          {/* NOMBRES */}
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="subtitle1" fontWeight={600} mb={2}>
-              Nombres
-            </Typography>
+              {/* APELLIDOS */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Apellidos
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <TextField fullWidth label="Primer Apellido" name="primer_apellido" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField fullWidth label="Segundo Apellido" name="segundo_apellido" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField fullWidth label="Apellido de Casada" name="apellido_casada" onChange={handleChange} size="small" />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <TextField fullWidth label="Primer Nombre" name="primer_nombre" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField fullWidth label="Segundo Nombre" name="segundo_nombre" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField fullWidth label="Tercer Nombre" name="tercer_nombre" onChange={handleChange} size="small" />
-              </Grid>
-            </Grid>
-          </Paper>
+              {/* IDENTIFICACIÓN */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Identificación
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="DPI" name="dpi" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="NIT" name="nit" onChange={handleChange} required size="small" />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-          {/* APELLIDOS */}
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="subtitle1" fontWeight={600} mb={2}>
-              Apellidos
-            </Typography>
+              {/* CONTACTO */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Información de contacto
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Correo" name="correo" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Teléfono" name="telefono" onChange={handleChange} size="small" />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label="Dirección" name="direccion" onChange={handleChange} size="small" multiline rows={5} />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <TextField fullWidth label="Primer Apellido" name="primer_apellido" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField fullWidth label="Segundo Apellido" name="segundo_apellido" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField fullWidth label="Apellido de Casada" name="apellido_casada" onChange={handleChange} size="small" />
-              </Grid>
-            </Grid>
-          </Paper>
+              {/* UBICACIÓN */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Ubicación
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Departamento" name="departamento" onChange={handleChange} required size="small" />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Municipio" name="municipio" onChange={handleChange} required size="small" />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-          {/* IDENTIFICACIÓN */}
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="subtitle1" fontWeight={600} mb={2}>
-              Identificación
-            </Typography>
+              {/* DATOS ADICIONALES (NUEVOS) */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Datos adicionales
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <DatePicker
+                      label="Fecha de nacimiento"
+                      value={form.fecha_nacimiento}
+                      onChange={(newValue) => setForm({ ...form, fecha_nacimiento: newValue })}
+                      slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Género"
+                      name="genero"
+                      value={form.genero}
+                      onChange={handleChange}
+                      size="small"
+                    >
+                      <MenuItem value="M">Masculino</MenuItem>
+                      <MenuItem value="F">Femenino</MenuItem>
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Nivel académico"
+                      name="nivel_academico"
+                      value={form.nivel_academico}
+                      onChange={handleChange}
+                      size="small"
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <TextField fullWidth label="DPI" name="dpi" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField fullWidth label="NIT" name="nit" onChange={handleChange} required size="small" />
-              </Grid>
-            </Grid>
-          </Paper>
+              {/* FOTO */}
+              <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+                <Typography variant="subtitle1" fontWeight={600} mb={2}>
+                  Foto
+                </Typography>
+                <Box
+                  component="label"
+                  sx={{
+                    border: "2px dashed #ccc",
+                    borderRadius: 2,
+                    p: 3,
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 1,
+                    minHeight: "100px",
+                    "&:hover": { borderColor: "#1976d2", bgcolor: "#f8fafc" },
+                  }}
+                >
+                  <Typography variant="body2">Seleccionar fotografía</Typography>
+                  <input type="file" hidden onChange={handleFileChange} />
+                </Box>
+              </Paper>
 
-          {/* CONTACTO */}
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="subtitle1" fontWeight={600} mb={2}>
-              Información de contacto
-            </Typography>
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <TextField fullWidth label="Correo" name="correo" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField fullWidth label="Teléfono" name="telefono" onChange={handleChange} size="small" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField fullWidth label="Dirección" name="direccion" onChange={handleChange} size="small" multiline rows={5} />
-              </Grid>
-            </Grid>
-          </Paper>
-
-          {/* UBICACIÓN */}
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="subtitle1" fontWeight={600} mb={2}>
-              Ubicación
-            </Typography>
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <TextField fullWidth label="Departamento" name="departamento" onChange={handleChange} required size="small" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField fullWidth label="Municipio" name="municipio" onChange={handleChange} required size="small" />
-              </Grid>
-            </Grid>
-          </Paper>
-
-          {/* FOTO */}
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="subtitle1" fontWeight={600} mb={2}>
-              Foto
-            </Typography>
-
-            <Box
-              component="label"
-              sx={{
-                border: "2px dashed #ccc",
-                borderRadius: 2,
-                p: 3,
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 1,
-                minHeight: "100px",
-                "&:hover": { borderColor: "#1976d2", bgcolor: "#f8fafc" },
-              }}
-            >
-              <Typography variant="body2">
-                Seleccionar fotografia
-              </Typography>
-
-              <input type="file" hidden onChange={handleFileChange} />
-            </Box>
-          </Paper>
-
-          {/* ESTADO */}
-          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={form.activo}
-                  onChange={(e) =>
-                    setForm({ ...form, activo: e.target.checked })
+              {/* ESTADO */}
+              <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={form.activo}
+                      onChange={(e) => setForm({ ...form, activo: e.target.checked })}
+                    />
                   }
+                  label="Activo"
                 />
-              }
-              label="Activo"
-            />
-          </Paper>
+              </Paper>
 
-          {/* BOTÓN */}
-          <Box display="flex" justifyContent="flex-end">
-            <Button type="submit" variant="contained">
-              Guardar
-            </Button>
+              {/* BOTÓN */}
+              <Box display="flex" justifyContent="flex-end">
+                <Button type="submit" variant="contained">
+                  Guardar
+                </Button>
+              </Box>
+            </Stack>
           </Box>
-
-        </Stack>
+        </Paper>
       </Box>
-    </Paper>
-  </Box>
-);
+    </LocalizationProvider>
+  );
 }

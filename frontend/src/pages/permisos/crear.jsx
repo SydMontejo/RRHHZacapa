@@ -318,6 +318,7 @@ export default function CrearPermiso() {
     fecha_requerida: "",
     dias_solicitados: 1,
     documento: null,
+    autorizado_por: '',
   });
   const [empleado, setEmpleado] = useState(null);
   const [numeroEmpleado, setNumeroEmpleado] = useState("");
@@ -368,6 +369,7 @@ export default function CrearPermiso() {
     data.append("motivo", form.motivo);
     data.append("fecha_requerida", form.fecha_requerida);
     data.append("dias_solicitados", form.dias_solicitados);
+    data.append("autorizado_por", form.autorizado_por);
     if (form.documento) data.append("documento", form.documento);
 
     try {
@@ -401,7 +403,7 @@ export default function CrearPermiso() {
       <form onSubmit={handleSubmit}>
   <Stack spacing={3}>
 
-    {/* 🔹 SECCIÓN 1: BÚSQUEDA */}
+    {/*Busqueda*/}
     <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
       <Typography variant="subtitle1" fontWeight={600} mb={2}>
         Buscar empleado
@@ -439,7 +441,7 @@ export default function CrearPermiso() {
       </Grid>
     </Paper>
 
-    {/* 🔹 SECCIÓN 2: FECHA + DÍAS */}
+    {/* Duracion de permiso */}
     <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
       <Typography variant="subtitle1" fontWeight={600} mb={2}>
         Duración del permiso
@@ -473,10 +475,23 @@ export default function CrearPermiso() {
             size="small"
           />
         </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            name="autorizado_por"
+            label="Nombre de quien autoriza"
+            value={form.autorizado_por || ""}
+            onChange={handleChange}
+            size="small"
+            placeholder="Ej: Lic. Ana Pérez"
+          />
+        </Grid>
+
       </Grid>
     </Paper>
 
-    {/* 🔹 SECCIÓN 3: MOTIVO (FULL WIDTH) */}
+    {/* Motivo permiso*/}
     <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
       <Typography variant="subtitle1" fontWeight={600} mb={2}>
         Justificación
@@ -495,7 +510,7 @@ export default function CrearPermiso() {
       />
     </Paper>
 
-    {/* 🔹 SECCIÓN 4: DOCUMENTO */}
+    {/* Up Documento*/}
     <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
   <Typography variant="subtitle1" fontWeight={600} mb={2}>
     Documento adjunto (opcional)
@@ -544,7 +559,7 @@ export default function CrearPermiso() {
   </Box>
 </Paper>
 
-    {/* 🔹 BOTONES */}
+    {/* Botones*/}
     <Box display="flex" justifyContent="flex-end" gap={2}>
       <Button
         variant="outlined"

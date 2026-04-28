@@ -8,7 +8,7 @@ import {
   Typography,
   MenuItem,
   Switch,
-  FormControlLabel, Paper, Stack, Grid
+  FormControlLabel, Paper, Stack, Grid, InputAdornment
 } from "@mui/material";
 
 export default function CrearEmpleado() {
@@ -32,6 +32,7 @@ export default function CrearEmpleado() {
     comisionado_seccion_numero: "",
     comisionado_seccion_nombre: "",
     activo: true,
+    salario:'',
   });
 
   const [personas, setPersonas] = useState([]);
@@ -151,6 +152,20 @@ export default function CrearEmpleado() {
                   label="Fecha de contratación"
                   InputLabelProps={{ shrink: true }}
                   size="small"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Salario (Q)"
+                  name="salario"
+                  type="number"
+                  step="0.01"
+                  value={form.salario}
+                  onChange={handleChange}
+                  fullWidth
+                  size="small"
+                  InputProps={{ startAdornment: <InputAdornment position="start">Q</InputAdornment> }}
                 />
               </Grid>
             </Grid>

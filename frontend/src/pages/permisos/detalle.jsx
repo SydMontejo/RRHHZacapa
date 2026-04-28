@@ -26,7 +26,7 @@ export default function DetallePermiso() {
     <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, px: 2 }}>
       <Paper sx={{ p: 4 }}>
         <Typography variant="h4" gutterBottom>Detalle del Permiso #{permiso.id_permiso}</Typography>
-        <Typography><strong>Empleado:</strong> {permiso.empleado_nombre} {permiso.empleado_apellido}</Typography>
+        <Typography><strong>Empleado:</strong> {permiso.empleado_nombre_completo}</Typography>
         <Typography><strong>Motivo:</strong> {permiso.motivo}</Typography>
         <Typography><strong>Fecha solicitud:</strong> {permiso.fecha_solicitud}</Typography>
         <Typography><strong>Fecha requerida:</strong> {permiso.fecha_requerida}</Typography>
@@ -38,6 +38,9 @@ export default function DetallePermiso() {
           <Typography>
             <strong>Documento:</strong> <a href={permiso.documento_url} target="_blank" rel="noopener noreferrer">Ver PDF</a>
           </Typography>
+        )}
+        {permiso.autorizado_por && (
+          <Typography><strong>Autorizado por:</strong> {permiso.autorizado_por}</Typography>
         )}
         <Button variant="outlined" sx={{ mt: 2 }} onClick={() => navigate("/dashboard/permisos")}>Volver</Button>
       </Paper>

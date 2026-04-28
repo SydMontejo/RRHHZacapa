@@ -7,8 +7,8 @@ from .filters import PermisoFilter
 from django.utils import timezone
 from django.db.models import Q
 from .models import Rol, Vacacion
-from .models import Renglon, Servicio, Persona, Empleado, Contrato, Permiso
-from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer, ContratoSerializer, PermisoSerializer, VacacionSerializer
+from .models import Renglon, Servicio, Persona, Empleado, Contrato, Permiso, MovimientoPersonal
+from .serializers import RolSerializer, RenglonSerializer, ServicioSerializer, PersonaSerializer, EmpleadoSerializer, ContratoSerializer, PermisoSerializer, VacacionSerializer, MovimientoPersonalSerializer
 from accounts.permissions import EsAdminSistema, EsRRHH1oAdmin
 
 class RolViewSet(viewsets.ReadOnlyModelViewSet):
@@ -115,9 +115,10 @@ class PermisoViewSet(viewsets.ModelViewSet):
     queryset = Permiso.objects.all()
     serializer_class = PermisoSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['estado']
     filterset_class = PermisoFilter
+    search_fields = ['id_empleado__numero_empleado', 'motivo']
 
 class VacacionViewSet(viewsets.ModelViewSet):
     queryset = Vacacion.objects.all()
@@ -185,5 +186,13 @@ class SancionViewSet(viewsets.ModelViewSet):
         sancion.deleted_at = timezone.now()
         sancion.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class MovimientoPersonalViewSet(viewsets.ModelViewSet):
+    queryset = MovimientoPersonal.objects.all()
+    serializer_class = MovimientoPersonalSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id_empleado__numero_empleado', 'id_empleado__id_persona__primer_nombre', 
+                     'id_empleado__id_persona__primer_apellido', 'tipo']
     
     
