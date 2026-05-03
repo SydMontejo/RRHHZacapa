@@ -257,13 +257,9 @@ class Sancion(models.Model):
         return f"Sanción {self.id_sancion} - {self.id_empleado.numero_empleado}"
     
 class MovimientoPersonal(models.Model):
-    TIPO_CHOICES = (
-        ('ENTREGA_PUESTO', 'Entrega de Puesto'),
-        ('TOMA_PUESTO', 'Toma de Puesto'),
-    )
     id_movimiento = models.AutoField(primary_key=True)
     id_empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, db_column='id_empleado')
-    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    tipo = models.CharField(max_length=100)
     fecha_efectiva = models.DateField()
     descripcion = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -40,9 +40,13 @@ class PersonaSerializer(serializers.ModelSerializer):
         return value
 
 class EmpleadoSerializer(serializers.ModelSerializer):
-    queryset = Empleado.objects.all()
+    #queryset = Empleado.objects.all()
 
     search_fields = ['numero_empleado','id_persona__dpi', 'id_persona__primer_nombre']
+    salario = serializers.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    coerce_to_string=False)
     persona_nombre = serializers.SerializerMethodField()
     renglon_codigo = serializers.CharField(source='id_renglon.codigo', read_only=True)
     servicio_nombre = serializers.CharField(source='id_servicio.nombre', read_only=True)

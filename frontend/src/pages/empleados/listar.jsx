@@ -27,7 +27,7 @@ export default function ListarEmpleados() {
   const [renglones, setRenglones] = useState([]);
   const [servicios, setServicios] = useState([]);
   const [busqueda, setBusqueda] = useState(""); // estado para búsqueda
-
+  
   const [openModal, setOpenModal] = useState(false);
   const [empleadoEdit, setEmpleadoEdit] = useState(null);
   const [openDetalleModal, setOpenDetalleModal] = useState(false);
@@ -180,10 +180,15 @@ export default function ListarEmpleados() {
       field: "salario",
       headerName: "Salario (Q)",
       width: 120,
-      valueFormatter: (params) => {
-        if (params.value === null || params.value === undefined) return "N/A";
-        return new Intl.NumberFormat("es-GT", { style: "currency", currency: "GTQ" }).format(params.value);
-      }
+      renderCell: (params) => {
+        const value = parseFloat(params.row.salario);
+        if (isNaN(value)) return "N/A";
+
+        return new Intl.NumberFormat("es-GT", {
+          style: "currency",
+          currency: "GTQ"
+        }).format(value);
+        }
     },
     {
       field: "acciones",
@@ -431,7 +436,7 @@ export default function ListarEmpleados() {
                 <Typography><strong>Ubicación:</strong> {empleadoDetalle.ubicacion_fisica || 'N/A'}</Typography>
                 <Typography><strong>Fecha:</strong> {empleadoDetalle.fecha_contratacion || 'N/A'}</Typography>
                 <Typography><strong>Activo:</strong> {empleadoDetalle.activo ? 'Sí' : 'No'}</Typography>
-                <Typography><strong>Salario:</strong> {empleadoDetalle.salario ? `Q ${empleadoDetalle.salario.toFixed(2)}` : 'N/A'}</Typography>
+                <Typography><strong>Salario:</strong> {empleadoDetalle.salario && !isNaN (parseFloat(empleadoDetalle.salario)) ? `Q ${parseFloat(empleadoDetalle.salario).toFixed(2)}` : 'N/A'}</Typography>
               </Paper>
 
               <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>

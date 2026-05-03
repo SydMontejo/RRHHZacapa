@@ -85,7 +85,8 @@ export default function CrearEmpleado() {
       navigate("/dashboard/empleados");
 
     } catch (error) {
-      console.error(error);
+      console.error("Detalle de error", err.response.data);
+      setError(JSON.stringify(error.response?.data));
       alert("Error al crear empleado");
     }
   };
@@ -246,6 +247,7 @@ export default function CrearEmpleado() {
                 <TextField
                   label="Ubicación física"
                   name="ubicacion_fisica"
+                  value={form.ubicacion_fisica}
                   onChange={handleChange}
                   fullWidth
                   size="small"
