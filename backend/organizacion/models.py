@@ -271,3 +271,42 @@ class MovimientoPersonal(models.Model):
 
     def __str__(self):
         return f"{self.tipo} - {self.id_empleado} - {self.fecha_efectiva}"
+    
+
+# ========== AUDITORIAS ==========
+from auditlog.registry import auditlog
+from django.contrib.auth import get_user_model
+
+# 1. Rol
+auditlog.register(Rol, exclude_fields=['created_at', 'updated_at'])
+
+# 2. Renglon
+auditlog.register(Renglon, exclude_fields=['created_at', 'updated_at'])
+
+# 3. Servicio
+auditlog.register(Servicio, exclude_fields=['created_at', 'updated_at'])
+
+# 4. Persona
+auditlog.register(Persona, exclude_fields=['created_at', 'updated_at', 'deleted_at'])
+
+# 5. Empleado
+auditlog.register(Empleado, exclude_fields=['created_at', 'updated_at', 'deleted_at', 'created_by'])
+
+# 6. Contrato
+auditlog.register(Contrato, exclude_fields=['created_at'])
+
+# 7. Permiso
+auditlog.register(Permiso, exclude_fields=['created_at', 'updated_at'])
+
+# 8. Vacacion
+auditlog.register(Vacacion, exclude_fields=['created_at', 'updated_at'])
+
+# 9. Sancion
+auditlog.register(Sancion, exclude_fields=['created_at', 'updated_at', 'deleted_at', 'created_by'])
+
+# 10. MovimientoPersonal
+auditlog.register(MovimientoPersonal, exclude_fields=['created_at', 'updated_at'])
+
+# 11. Usuario (modelo de autenticación de Django)
+User = get_user_model()
+auditlog.register(User, exclude_fields=['last_login', 'date_joined'])

@@ -71,7 +71,8 @@ export default function PermisosReporte() {
       "Fecha solicitud": item.fecha_solicitud,
       "Fecha requerida": item.fecha_requerida,
       Días: item.dias_solicitados,
-      Estado: item.estado
+      Estado: item.estado,
+      "Aprobado por": item.autorizado_por
     }));
     const hoja = XLSX.utils.json_to_sheet(datosExportar);
     const libro = XLSX.utils.book_new();
@@ -98,7 +99,9 @@ export default function PermisosReporte() {
       else if (params.value === "PENDIENTE") color = "warning";
       return <Chip label={params.value} color={color} size="small" />;
     }
-  }
+  },
+  { field: "autorizado_por", headerName: "Aprobado por", width: 250 }
+  
 ];
 
   return (

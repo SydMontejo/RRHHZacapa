@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'organizacion.apps.OrganizacionConfig',
+    #'easyaudit',
+    'auditlog'
 ]
 
 MIDDLEWARE = [
@@ -61,6 +63,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
+    'core.middleware.DRFTokenAuthMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -126,7 +132,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = True 
 
 
 # Static files (CSS, JavaScript, Images)

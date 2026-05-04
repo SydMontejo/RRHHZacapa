@@ -14,12 +14,12 @@ from accounts.permissions import EsAdminSistema, EsRRHH1oAdmin
 class RolViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Rol.objects.filter(activo=True)
     serializer_class = RolSerializer
-    permission_classes = [EsAdminSistema]
+    permission_classes = [EsRRHH1oAdmin]
 
 class RenglonViewSet(viewsets.ModelViewSet):
     queryset = Renglon.objects.filter(activo=True)
     serializer_class = RenglonSerializer
-    permission_classes = [EsAdminSistema]
+    permission_classes = [EsRRHH1oAdmin]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -30,7 +30,7 @@ class RenglonViewSet(viewsets.ModelViewSet):
 class ServicioWiewSet(viewsets.ModelViewSet):
     queryset = Servicio.objects.filter(activo=True)
     serializer_class = ServicioSerializer
-    permission_classes = [EsAdminSistema]
+    permission_classes = [EsRRHH1oAdmin]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -49,7 +49,7 @@ class PersonaViewSet(viewsets.ModelViewSet):
 class EmpleadoViewSet(viewsets.ModelViewSet):
     queryset = Empleado.objects.all().order_by('-id_empleado')
     serializer_class = EmpleadoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [EsRRHH1oAdmin]#Desde aqui se autentican los roles
     filter_backends = [filters.SearchFilter]
     search_fields = ['numero_empleado','id_persona__dpi', 'id_persona__primer_nombre']
 
@@ -114,7 +114,7 @@ class ContratoViewSet(viewsets.ModelViewSet):
 class PermisoViewSet(viewsets.ModelViewSet):
     queryset = Permiso.objects.all()
     serializer_class = PermisoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [EsRRHH1oAdmin]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['estado']
     filterset_class = PermisoFilter
@@ -123,7 +123,7 @@ class PermisoViewSet(viewsets.ModelViewSet):
 class VacacionViewSet(viewsets.ModelViewSet):
     queryset = Vacacion.objects.all()
     serializer_class = VacacionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [EsRRHH1oAdmin]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['estado']  # Permite filtrar por estado en la URL: ?estado=APROBADO
 
@@ -171,7 +171,7 @@ from .serializers import SancionSerializer
 class SancionViewSet(viewsets.ModelViewSet):
     queryset = Sancion.objects.filter(activo=True, deleted_at__isnull=True)
     serializer_class = SancionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [EsRRHH1oAdmin]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['fecha_sancion']
     search_fields = ['id_empleado__numero_empleado']
@@ -190,7 +190,7 @@ class SancionViewSet(viewsets.ModelViewSet):
 class MovimientoPersonalViewSet(viewsets.ModelViewSet):
     queryset = MovimientoPersonal.objects.all()
     serializer_class = MovimientoPersonalSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [EsRRHH1oAdmin]
     filter_backends = [filters.SearchFilter]
     search_fields = ['id_empleado__numero_empleado', 'id_empleado__id_persona__primer_nombre', 
                      'id_empleado__id_persona__primer_apellido', 'tipo']

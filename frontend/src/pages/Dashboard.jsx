@@ -145,7 +145,7 @@ export default function Dashboard() {
 
   const columnas = [
 
-    { field: "id", headerName: "ID", width: 90 },
+    //{ field: "id", headerName: "ID", width: 90 },
 
     { field: "username", headerName: "Usuario", flex: 1 },
 
