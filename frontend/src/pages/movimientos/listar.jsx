@@ -59,30 +59,30 @@ export default function ListarMovimientos() {
   };
 
   const columns = [
-    { field: "id_movimiento", headerName: "ID", width: 80 },
+    //{ field: "id_movimiento", headerName: "ID", width: 80 },
     { field: "empleado_nombre_completo", headerName: "Empleado", width: 300 },
     { field: "empleado_numero", headerName: "No. Empleado", width: 130 },
     { field: "tipo", headerName: "Tipo", width: 180 },
     { field: "fecha_efectiva", headerName: "Fecha efectiva", width: 130 },
     { field: "descripcion", headerName: "Descripción", width: 300 },
-    {
-      field: "acciones",
-      headerName: "Acciones",
-      width: 120,
-      renderCell: (params) => (
-        <>
-          <IconButton onClick={() => navigate(`/dashboard/movimientos/${params.row.id_movimiento}`)}>
-            <VisibilityIcon />
-          </IconButton>
-          <IconButton onClick={() => navigate(`/dashboard/movimientos/editar/${params.row.id_movimiento}`)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={() => handleEliminar(params.row.id_movimiento)} color="error">
-            <DeleteIcon />
-          </IconButton>
-        </>
-      )
-    }
+    // {
+    //   field: "acciones",
+    //   headerName: "Acciones",
+    //   width: 120,
+    //   renderCell: (params) => (
+    //     <>
+    //       <IconButton onClick={() => navigate(`/dashboard/movimientos/${params.row.id_movimiento}`)}>
+    //         <VisibilityIcon />
+    //       </IconButton>
+    //       <IconButton onClick={() => navigate(`/dashboard/movimientos/editar/${params.row.id_movimiento}`)}>
+    //         <EditIcon />
+    //       </IconButton>
+    //       <IconButton onClick={() => handleEliminar(params.row.id_movimiento)} color="error">
+    //         <DeleteIcon />
+    //       </IconButton>
+    //     </>
+    //   )
+    // }
   ];
 
   if (loading) return <CircularProgress />;

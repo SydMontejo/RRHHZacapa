@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   Box, Typography, IconButton, TextField, Button, Dialog,
-  DialogTitle, DialogContent, DialogActions, Alert, CircularProgress, Paper
+  DialogTitle, DialogContent, DialogActions, Alert, CircularProgress, Paper, Stack
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";

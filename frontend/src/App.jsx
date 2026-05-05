@@ -27,6 +27,8 @@ import ListarSanciones from "./pages/sanciones/listar";
 import PermisosReporte from "./pages/reportes/PermisosReporte";
 import CrearMovimiento from "./pages/movimientos/crear";
 import ListarMovimientos from "./pages/movimientos/listar";
+import VacacionesReporte from "./pages/reportes/VacacionesReporte";
+import EstadisticasEmpleados from "./pages/dash/EstadisticasEmpleados";
 function App() {
   return (
     <BrowserRouter>
@@ -62,6 +64,8 @@ function App() {
           <Route path="reportes/permisos" element={<PermisosReporte />} />
           <Route path="movimientos" element={<ListarMovimientos />} />
           <Route path="movimientos/crear" element={<CrearMovimiento />} />
+          <Route path="reportes/vacaciones" element={<VacacionesReporte />} />
+          <Route path="estadisticas/empleados" element={<EstadisticasEmpleados />} />
         </Route>
       </Routes>
     </BrowserRouter>

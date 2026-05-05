@@ -26,6 +26,7 @@ import {  ExpandLess,
 
 import GavelIcon from "@mui/icons-material/Gavel"
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 export default function Sidebar() {
 
@@ -250,6 +251,10 @@ export default function Sidebar() {
           {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/vacaciones/crear">
             <ListItemText primary="Solicitar Vacaciones" />
           </ListItemButton> */}
+          <ListItemButton sx={{ pl: 4 }} component={Link} to="/dashboard/reportes/vacaciones">
+            <ListItemIcon sx={{ color: "white" }}><AssessmentIcon /></ListItemIcon>
+            <ListItemText primary="Reporte de Vacaciones" />
+          </ListItemButton>
         </List>
       </Collapse>
         {/* =========================Sanciones============================ */}
@@ -284,6 +289,11 @@ export default function Sidebar() {
               </ListItemButton> */}
             </List>
           </Collapse>
+          {/* Estadisticas */}
+          <ListItemButton component={Link} to="/dashboard/estadisticas/empleados">
+            <ListItemIcon sx={{ color: "white" }}><BarChartIcon /></ListItemIcon>
+            <ListItemText primary="Estadísticas Empleados" />
+          </ListItemButton>
 
       </List>
     </Box>

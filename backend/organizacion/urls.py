@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
-from .views import RolViewSet, RenglonViewSet, ServicioWiewSet, PersonaViewSet, EmpleadoViewSet, ContratoViewSet, PermisoViewSet, VacacionViewSet, SancionViewSet, MovimientoPersonalViewSet
+from django.urls import path
+from .views import estadisticas_empleados, RolViewSet, RenglonViewSet, ServicioWiewSet, PersonaViewSet, EmpleadoViewSet, ContratoViewSet, PermisoViewSet, VacacionViewSet, SancionViewSet, MovimientoPersonalViewSet
 
 router = DefaultRouter()
 router.register(r'roles', RolViewSet, basename='roles')
@@ -13,4 +14,8 @@ router.register(r'vacaciones', VacacionViewSet, basename='vacasiones')
 router.register(r'sanciones', SancionViewSet, basename='sanciones')
 router.register(r'movimientos-personal', MovimientoPersonalViewSet, basename='movimientos-personal')
 
-urlpatterns = router.urls
+
+
+urlpatterns = [
+    path('estadisticas/empleados/', estadisticas_empleados, name='estadisticas-empleados'),
+] + router.urls

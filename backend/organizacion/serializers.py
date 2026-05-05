@@ -200,6 +200,10 @@ class VacacionSerializer(serializers.ModelSerializer):
     empleado_apellido = serializers.SerializerMethodField()
     documento_url = serializers.SerializerMethodField()
     estado_display = serializers.SerializerMethodField()
+    empleado_numero = serializers.SerializerMethodField()
+    empleado_ubicacion = serializers.SerializerMethodField()
+    empleado_nombre_completo = serializers.SerializerMethodField()
+    dias_solicitados = serializers.SerializerMethodField()
 
     class Meta:
         model = Vacacion
@@ -207,16 +211,20 @@ class VacacionSerializer(serializers.ModelSerializer):
         read_only_fields = ('fecha_solicitud', 'fecha_aprobacion', 'created_at', 'updated_at')
 
     def get_empleado_nombre(self, obj):
-        print(f"DEBUG: obj.id_empleado = {obj.id_empleado}")
-        if obj.id_empleado:
-            print(f"DEBUG: obj.id_empleado.id_persona = {obj.id_empleado.id_persona}")
-            if obj.id_empleado.id_persona:
-                print(f"DEBUG: primer_nombre = {obj.id_empleado.id_persona.primer_nombre}")
+        # print(f"DEBUG: obj.id_empleado = {obj.id_empleado}")
+        # if obj.id_empleado:
+        #     print(f"DEBUG: obj.id_empleado.id_persona = {obj.id_empleado.id_persona}")
+        #     if obj.id_empleado.id_persona:
+        #         print(f"DEBUG: primer_nombre = {obj.id_empleado.id_persona.primer_nombre}")
         return obj.id_empleado.id_persona.primer_nombre if obj.id_empleado and obj.id_empleado.id_persona else ''
 
     def get_empleado_apellido(self, obj):
         if obj.id_empleado and obj.id_empleado.id_persona:
-            return obj.id_empleado.id_persona.primer_apellido
+            p = obj.id_empleado.id_persona
+            apellidos = p.primer_apellido
+            if p.segundo_apellido:
+                apellidos += f" {p.segundo_apellido}"
+            return apellidos
         return ''
 
     def get_documento_url(self, obj):
@@ -239,6 +247,23 @@ class VacacionSerializer(serializers.ModelSerializer):
         if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
             raise serializers.ValidationError("La fecha fin debe ser posterior o igual a la fecha inicio")
         return data
+    
+    #Metodos para reportes
+    def get_empleado_numero(self, obj):
+        return obj.id_empleado.numero_empleado if obj.id_empleado else ''
+
+    def get_empleado_ubicacion(self, obj):
+        return obj.id_empleado.ubicacion_fisica if obj.id_empleado else ''
+
+    def get_empleado_nombre_completo(self, obj):
+        nombre = self.get_empleado_nombre(obj)
+        apellido = self.get_empleado_apellido(obj)
+        return f"{nombre} {apellido}".strip()
+
+    def get_dias_solicitados(self, obj):
+        if obj.fecha_inicio and obj.fecha_fin:
+            return (obj.fecha_fin - obj.fecha_inicio).days + 1
+        return 0
 
 # serializers.py
 from rest_framework import serializers

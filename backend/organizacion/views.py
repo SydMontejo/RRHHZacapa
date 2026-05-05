@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-from .filters import PermisoFilter
+from .filters import PermisoFilter, VacacionFilter
 from django.utils import timezone
 from django.db.models import Q
 from .models import Rol, Vacacion
@@ -121,11 +121,12 @@ class PermisoViewSet(viewsets.ModelViewSet):
     search_fields = ['id_empleado__numero_empleado', 'motivo']
 
 class VacacionViewSet(viewsets.ModelViewSet):
-    queryset = Vacacion.objects.all()
+    queryset = Vacacion.objects.all().order_by('-fecha_solicitud')
     serializer_class = VacacionSerializer
     permission_classes = [EsRRHH1oAdmin]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['estado']  # Permite filtrar por estado en la URL: ?estado=APROBADO
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_class = VacacionFilter
+    search_fields = ['id_empleado__numero_empleado', 'observaciones']  
 
     @action(detail=True, methods=['post'])
     def aceptar(self, request, pk=None):
@@ -158,6 +159,10 @@ class VacacionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print("Datos recibidos:", serializer.validated_data)
         serializer.save()
+    
+    def list(self, request, *args, **kwargs):
+        print("Parámetros recibidos:", request.query_params)
+        return super().list(request, *args, **kwargs)
 
 # views.py
 from rest_framework import viewsets, status, filters
@@ -195,4 +200,118 @@ class MovimientoPersonalViewSet(viewsets.ModelViewSet):
     search_fields = ['id_empleado__numero_empleado', 'id_empleado__id_persona__primer_nombre', 
                      'id_empleado__id_persona__primer_apellido', 'tipo']
     
-    
+#Estadisticas====================================================================
+from django.db.models import Count, Q
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.db.models import Count, Q, F
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def estadisticas_empleados(request):
+    try:
+        # Parámetros de filtro
+        genero = request.query_params.get('genero')          
+        renglon_id = request.query_params.get('renglon')     
+        servicio_id = request.query_params.get('servicio')   
+        colegiado = request.query_params.get('colegiado')    
+
+        # Base: empleados activos (no eliminados lógicamente)
+        qs = Empleado.objects.filter(activo=True, deleted_at__isnull=True)
+
+        # Aplicar filtros
+        if genero:
+            qs = qs.filter(id_persona__genero=genero)
+        if renglon_id:
+            qs = qs.filter(id_renglon_id=renglon_id)
+        if servicio_id:
+            qs = qs.filter(id_servicio_id=servicio_id)
+        if colegiado is not None:
+            if colegiado.lower() == 'true':
+                qs = qs.filter(colegiado_activo__isnull=False).exclude(colegiado_activo='')
+            else:
+                qs = qs.filter(Q(colegiado_activo__isnull=True) | Q(colegiado_activo=''))
+
+        # ---------- Conteos ----------
+        # Por género (incluyendo no especificado)
+        total_masculino = qs.filter(id_persona__genero='M').count()
+        total_femenino = qs.filter(id_persona__genero='F').count()
+        total_no_especificado = qs.filter(id_persona__genero__isnull=True).count()
+        counts_genero = [
+            {'id_persona__genero': 'M', 'total': total_masculino},
+            {'id_persona__genero': 'F', 'total': total_femenino},
+            {'id_persona__genero': None, 'total': total_no_especificado},
+        ]
+
+        # Por renglón
+        counts_renglon = qs.values(
+            renglon_id=F('id_renglon_id'),
+            codigo=F('id_renglon__codigo'),
+            descripcion=F('id_renglon__descripcion')
+        ).annotate(total=Count('id_empleado')).order_by('-total')
+
+        # Por servicio
+        counts_servicio = qs.values(
+            servicio_id=F('id_servicio_id'),
+            nombre=F('id_servicio__nombre')
+        ).annotate(total=Count('id_empleado')).order_by('-total')
+
+        # Por colegiado activo
+        colegiado_si = qs.filter(colegiado_activo__isnull=False).exclude(colegiado_activo='').count()
+        colegiado_no = qs.filter(Q(colegiado_activo__isnull=True) | Q(colegiado_activo='')).count()
+        counts_colegiado = {
+            'colegiado_activo': colegiado_si,
+            'no_colegiado': colegiado_no
+        }
+
+        # ---------- Datos de empleados (tabla) ----------
+        employees = []
+        for emp in qs.select_related('id_persona', 'id_renglon', 'id_servicio'):
+            persona = emp.id_persona
+
+            # Nombre completo
+            nombre_completo = f"{persona.primer_nombre} {persona.primer_apellido}"
+            if persona.segundo_nombre:
+                nombre_completo += f" {persona.segundo_nombre}"
+            if persona.segundo_apellido:
+                nombre_completo += f" {persona.segundo_apellido}"
+
+            # Género (texto claro)
+            if persona.genero == 'M':
+                genero_texto = 'Masculino'
+            elif persona.genero == 'F':
+                genero_texto = 'Femenino'
+            else:
+                genero_texto = 'No especificado'
+
+            employees.append({
+                'id_empleado': emp.id_empleado,
+                'numero_empleado': emp.numero_empleado,
+                'nombre_completo': nombre_completo,
+                'renglon_codigo': emp.id_renglon.codigo if emp.id_renglon else '',
+                'servicio_nombre': emp.id_servicio.nombre if emp.id_servicio else '',
+                'ubicacion_fisica': emp.ubicacion_fisica or '',
+                'colegiado_activo': 'Sí' if emp.colegiado_activo else 'No',
+                'genero': genero_texto,
+                'puesto_oficial': emp.puesto_oficial or '',
+                'departamento': persona.departamento or '',
+                'municipio': persona.municipio or '',
+                'fecha_contratacion': emp.fecha_contratacion,
+                'salario': str(emp.salario) if emp.salario is not None else '',
+            })
+
+        response_data = {
+            'counts': {
+                'genero': counts_genero,
+                'renglon': list(counts_renglon),
+                'servicio': list(counts_servicio),
+                'colegiado': counts_colegiado,
+            },
+            'employees': employees,
+        }
+        return Response(response_data)
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return Response({'error': str(e)}, status=500)
