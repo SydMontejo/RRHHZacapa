@@ -69,7 +69,7 @@ export default function EstadisticasEmpleados() {
     }
   };
 
-  // Efecto inicial: cargar sin filtros
+  // Carga sin filtros
   useEffect(() => {
     cargarDatos();
   }, []);
@@ -202,9 +202,9 @@ export default function EstadisticasEmpleados() {
           {data.counts && (
             <Grid container spacing={2} sx={{ mb: 3 }}>
               {/* Por género */}
-              <Grid item xs={12} md={4}>
-                <Card>
-                  <CardContent>
+              <Grid item xs={12} sm={6} md={4}>
+                <Card sx={{ height: 220, display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flexGrow: 1, overflow: 'auto' }}>
                     <Typography variant="h6">Género</Typography>
                     {data.counts.genero.map(g => (
                       <Typography key={g.id_persona__genero}>
@@ -215,35 +215,35 @@ export default function EstadisticasEmpleados() {
                 </Card>
               </Grid>
               {/* Colegiado */}
-              <Grid item xs={12} md={4}>
-                <Card>
-                  <CardContent>
+              <Grid item xs={12} sm={6} md={4}>
+                <Card sx={{ height: 220, display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flexGrow: 1, overflow: 'auto' }}>
                     <Typography variant="h6">Colegiado activo</Typography>
                     <Typography>Sí: {data.counts.colegiado.colegiado_activo}</Typography>
                     <Typography>No: {data.counts.colegiado.no_colegiado}</Typography>
                   </CardContent>
                 </Card>
               </Grid>
-              {/* Renglones más relevantes (top 5) */}
-              <Grid item xs={12} md={4}>
-                <Card>
-                  <CardContent>
+              {/* Renglones (top 5) */}
+              <Grid item xs={12} sm={6} md={4}>
+                <Card sx={{ height: 220, display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flexGrow: 1, overflow: 'auto' }}>
                     <Typography variant="h6">Por renglón (top)</Typography>
                     {data.counts.renglon.slice(0, 5).map(r => (
-                      <Typography key={r.id_renglon}>
-                        {r.codigo} - {r.descripcion}: {r.total}
+                      <Typography key={r.renglon_id}>
+                        {r.codigo} {/*- {r.descripcion}*/}: {r.total}
                       </Typography>
                     ))}
                   </CardContent>
                 </Card>
               </Grid>
-              {/* Servicios más relevantes (top 5) */}
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <CardContent>
+              {/* Servicios (top 5) */}
+              <Grid item xs={12} sm={6} md={4}>
+                <Card sx={{ height: 220, display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flexGrow: 1, overflow: 'auto' }}>
                     <Typography variant="h6">Por servicio (top)</Typography>
                     {data.counts.servicio.slice(0, 5).map(s => (
-                      <Typography key={s.id_servicio}>
+                      <Typography key={s.servicio_id}>
                         {s.nombre}: {s.total}
                       </Typography>
                     ))}

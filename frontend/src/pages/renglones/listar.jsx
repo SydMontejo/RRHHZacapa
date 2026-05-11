@@ -213,9 +213,9 @@ export default function ListarRenglones() {
             <EditIcon />
           </IconButton>
 
-          <IconButton onClick={() => eliminarRenglon(params.row.id_renglon)}>
+          {/* <IconButton onClick={() => eliminarRenglon(params.row.id_renglon)}>
             <DeleteIcon color="error" />
-          </IconButton>
+          </IconButton> */}
         </>
       ),
     },

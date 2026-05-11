@@ -105,7 +105,7 @@ export default function Home() {
             "Juntos Construyendo un Servicio con Calidad Humana"
           </Typography>
           <Typography variant="h5" sx={{ mt: 2, fontWeight: "bold" }}>
-            BIENVENIDO AL PORTAL DE RECURSOS HUMANOS
+            BIENVENIDO AL MODULO DE RECURSOS HUMANOS
           </Typography>
         </Box>
         {/* Logo a la derecha*/}

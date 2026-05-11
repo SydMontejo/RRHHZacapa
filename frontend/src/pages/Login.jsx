@@ -89,7 +89,8 @@ export default function Login() {
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
 
-      const res = await fetch("http://127.0.0.1:8000/api/me/", {
+       const res = await fetch("http://127.0.0.1:8000/api/me/", {
+      //const res = await fetch("http://192.168.86.163:8000/api/me/", {
         headers: { Authorization: `Bearer ${data.access}` },
       });
       const userData = await res.json();

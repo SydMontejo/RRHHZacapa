@@ -27,10 +27,12 @@ import {  ExpandLess,
 import GavelIcon from "@mui/icons-material/Gavel"
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import logoHospital from "../assets/logo-hospital.png";
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 export default function Sidebar() {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user")) || {};
 
   const [openUsuarios, setOpenUsuarios] = useState(false);
   const [openRenglones, setOpenRenglones] = useState(false);
@@ -42,6 +44,10 @@ export default function Sidebar() {
   const [openVacaciones, setOpenVacaciones] = useState(false);
   const [openSanciones, setOpenSanciones] = useState(false);
   const [openMovimientos, setOpenMovimientos] = useState(false);
+  
+  const nombreCompleto = user.first_name || user.last_name
+  ? `${user.first_name || ''} ${user.last_name || ''}`.trim()
+  : user.username || 'Asignar Nombre';
 
   return (
     <Box
@@ -53,9 +59,21 @@ export default function Sidebar() {
         height: "100vh"
       }}
     >
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        RRHH Panel
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h6">
+          RRHH Panel
+        </Typography>
+        <Box
+          component="img"
+          src={logoHospital}
+          alt="Logo Hospital"
+          sx={{ width: 60, height: 60, objectFit: 'cover', backgroundColor: "white", borderRadius: "50%"}}
+        />
+      </Box>
+      <Typography variant="body2" sx={{ mb: 2, color: "#ccc", textAlign: "left" }}>
+        {nombreCompleto}
       </Typography>
+      
 
       <List component="nav">
         {/* Botón Home al inicio */}
@@ -64,7 +82,7 @@ export default function Sidebar() {
           <ListItemText primary="Home" />
         </ListItemButton>
         {/* ================= USUARIOS ================= */}
-        {user?.rol === "ADMIN" && (
+        {/* {user?.rol === "ADMIN" && (
           <>
             <ListItemButton onClick={() => setOpenUsuarios(!openUsuarios)}>
               <ListItemIcon sx={{ color: "white" }}><PeopleIcon /></ListItemIcon>
@@ -83,19 +101,19 @@ export default function Sidebar() {
                   <ListItemText primary="Listar Usuarios" />
                 </ListItemButton>
 
-                {/* <ListItemButton
+                <ListItemButton
                   sx={{ pl: 4 }}
                   component={Link}
                   to="/dashboard/usuarios/crear"
                 >
                   <ListItemText primary="Crear Usuario" />
-                </ListItemButton> */}
+                </ListItemButton>
 
               </List>
             </Collapse>
           
           </>
-        )}
+        )} */}
 
         {/* ================= RENGLONES ================= */}
         {user?.rol === "ADMIN" && (
@@ -293,6 +311,12 @@ export default function Sidebar() {
           <ListItemButton component={Link} to="/dashboard/estadisticas/empleados">
             <ListItemIcon sx={{ color: "white" }}><BarChartIcon /></ListItemIcon>
             <ListItemText primary="Estadísticas Empleados" />
+          </ListItemButton>
+
+          {/* ======================Listado Generar=========================== */}
+          <ListItemButton component={Link} to="/dashboard/listado-general">
+            <ListItemIcon sx={{ color: "white" }}><TableChartIcon /></ListItemIcon>
+            <ListItemText primary="Listado General" />
           </ListItemButton>
 
       </List>

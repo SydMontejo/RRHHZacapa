@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-7_u#xs+k#c9%*%9%yku&v0hqt!8f3!z9&alv)4@x)48st(%jmn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -158,10 +158,12 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
-
+# CORS_ALLOWED_ORIGINS = [
+    
+#     "http://localhost:5173",
+    
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
 import os
 
 MEDIA_URL = '/media/'

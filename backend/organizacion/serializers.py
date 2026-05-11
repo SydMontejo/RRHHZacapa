@@ -274,6 +274,7 @@ class SancionSerializer(serializers.ModelSerializer):
     empleado_servicio = serializers.SerializerMethodField()
     empleado_ubicacion = serializers.SerializerMethodField()
     documento_url = serializers.SerializerMethodField()
+    empleado_numero = serializers.SerializerMethodField()  
 
     class Meta:
         model = Sancion
@@ -301,6 +302,9 @@ class SancionSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.documento.url)
             return obj.documento.url
         return None
+    
+    def get_empleado_numero(self, obj):
+        return obj.id_empleado.numero_empleado if obj.id_empleado else ''
     
 class MovimientoPersonalSerializer(serializers.ModelSerializer):
     empleado_nombre_completo = serializers.SerializerMethodField()
